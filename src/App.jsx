@@ -3,23 +3,198 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Menu, X, ArrowRight, Play, Code, Smartphone,
   Youtube, TrendingUp, DollarSign, MousePointer2,
-  CheckCircle2, Calendar, Clock, ChevronRight,
+  CheckCircle2, Calendar, Clock, ChevronRight, ChevronLeft,
   Users, Zap, HelpCircle, ChevronDown, BadgeCheck,
-  Layers, BarChart3, Lock
+  Layers, BarChart3, Lock, Volume2, VolumeX, MapPin, Mail, Linkedin, Twitter
 } from 'lucide-react';
 import createGlobe from 'cobe';
 
 // --- COMPONENTS ---
 
-const Navbar = ({ onOpenModal }) => (
+// ... (Navbar, Hero, InteractiveCore, Marquee, Protocol components remain unchanged)
+
+const VideoCarousel = () => {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isMuted, setIsMuted] = useState(true);
+
+  const videos = [
+    { id: 1, src: "/videos/1.mp4", title: "High-Performance Funnel", tag: "STRATEGY" },
+    { id: 2, src: "/videos/2.mp4", title: "Brand Narrative", tag: "PRODUCTION" },
+    { id: 3, src: "/videos/3.mp4", title: "Algorithm Breaker", tag: "GROWTH" },
+    { id: 4, src: "/videos/4.mp4", title: "Retention Engine", tag: "ADS" },
+    { id: 5, src: "/videos/5.mp4", title: "Scale System", tag: "SCALE" },
+    { id: 6, src: "/videos/6.mp4", title: "Viral Framework", tag: "ORGANIC" }
+  ];
+
+  // Auto-scroll every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveIndex((current) => (current + 1) % videos.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [videos.length]);
+
+  const getPositionStyles = (index) => {
+    const distance = (index - activeIndex + videos.length) % videos.length;
+
+    // Center Item
+    if (distance === 0) {
+      return {
+        x: 0,
+        scale: 1,
+        zIndex: 20,
+        opacity: 1,
+        rotateY: 0
+      };
+    }
+
+    // Right Item (immediate next)
+    if (distance === 1) {
+      return {
+        x: 220, // Reduced spacing for smoother look
+        scale: 0.85, // Sligthly larger for better flow
+        zIndex: 10,
+        opacity: 0.7, // Increased visibility
+        rotateY: -10
+      };
+    }
+
+    // Left Item (previous / last)
+    if (distance === videos.length - 1) {
+      return {
+        x: -220,
+        scale: 0.85,
+        zIndex: 10,
+        opacity: 0.7,
+        rotateY: 10
+      };
+    }
+
+    // Creating a smoother "back" layer
+    // Right + 2
+    if (distance === 2) {
+      return {
+        x: 380,
+        scale: 0.7,
+        zIndex: 5,
+        opacity: 0.4,
+        rotateY: -20
+      };
+    }
+
+    // Left + 2
+    if (distance === videos.length - 2) {
+      return {
+        x: -380,
+        scale: 0.7,
+        zIndex: 5,
+        opacity: 0.4,
+        rotateY: 20
+      };
+    }
+
+    // Default hidden/back
+    return {
+      x: 0,
+      scale: 0,
+      zIndex: 0,
+      opacity: 0
+    };
+  };
+
+  return (
+    <div className="relative w-full h-[650px] flex items-center justify-center overflow-hidden py-10">
+      <div className="absolute inset-x-0 top-0 h-[500px] flex items-center justify-center perspective-[1000px]">
+        {videos.map((video, index) => {
+          const styles = getPositionStyles(index);
+          const isActive = index === activeIndex;
+
+          return (
+            <motion.div
+              key={video.id}
+              className="absolute w-[280px] md:w-[320px] aspect-[9/16] rounded-3xl overflow-hidden shadow-2xl bg-black border border-white/10"
+              initial={styles}
+              animate={styles}
+              transition={{ duration: 0.6, ease: [0.32, 0.72, 0, 1] }} // Updated easing for "cycling type" smooth feel
+            >
+              <video
+                src={video.src}
+                className="w-full h-full object-cover"
+                autoPlay
+                loop
+                muted={isActive ? isMuted : true} // Only potentially unmute the active one
+                playsInline
+              />
+              {/* Overlay Content */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80" />
+
+              <div className="absolute top-4 left-4">
+                <div className="inline-block px-2 py-1 bg-white/10 backdrop-blur-md rounded text-[10px] font-mono text-white/80 border border-white/10">
+                  {video.tag}
+                </div>
+              </div>
+
+              {isActive && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="absolute bottom-6 left-0 w-full text-center"
+                >
+                  <h3 className="text-xl font-display font-bold text-white mb-2">{video.title}</h3>
+                </motion.div>
+              )}
+            </motion.div>
+          );
+        })}
+      </div>
+
+      {/* Navigation & Controls - Moved Lower and Outside */}
+      <div className="absolute bottom-4 left-0 right-0 z-50 flex items-center justify-center gap-8">
+        <button
+          onClick={() => setActiveIndex((curr) => (curr - 1 + videos.length) % videos.length)}
+          className="p-3 rounded-full bg-slate-900 border border-white/10 text-white hover:bg-orange hover:border-orange transition-all shadow-lg hover:shadow-orange/20"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+
+        <button
+          onClick={() => setIsMuted(!isMuted)}
+          className={`group flex items-center gap-2 px-6 py-3 rounded-full font-bold font-display text-sm uppercase tracking-wide transition-all shadow-lg ${isMuted ? 'bg-white text-black hover:bg-gray-200' : 'bg-slate-900 text-white border border-white/10 hover:bg-slate-800'}`}
+        >
+          {isMuted ? (
+            <>
+              <VolumeX className="w-4 h-4" />
+              Unmute Center
+            </>
+          ) : (
+            <>
+              <Volume2 className="w-4 h-4 text-orange" />
+              Muting...
+            </>
+          )}
+        </button>
+
+        <button
+          onClick={() => setActiveIndex((curr) => (curr + 1) % videos.length)}
+          className="p-3 rounded-full bg-slate-900 border border-white/10 text-white hover:bg-orange hover:border-orange transition-all shadow-lg hover:shadow-orange/20"
+        >
+          <ChevronRight className="w-6 h-6" />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const Navbar = ({ onOpenModal, onNavigate }) => (
   <nav className="fixed top-0 left-0 right-0 z-40 glass-nav px-6 py-4 flex justify-between items-center bg-slate-950/80 backdrop-blur-md border-b border-white/5">
     <div className="flex items-center gap-12">
-      <div className="text-2xl font-bold font-display tracking-tighter text-white">LBB.</div>
+      <button onClick={() => onNavigate('home')} className="text-2xl font-bold font-display tracking-tighter text-white">LBB.</button>
       <div className="hidden md:flex gap-8 text-sm font-medium text-gray-400">
-        <a href="#work" className="hover:text-white transition-colors">Work</a>
-        <a href="#protocol" className="hover:text-white transition-colors">Protocol</a>
-        <a href="#team" className="hover:text-white transition-colors">Team</a>
-        <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
+        <button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('work')?.scrollIntoView(), 100); }} className="hover:text-white transition-colors">Work</button>
+        <button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('why-us')?.scrollIntoView(), 100); }} className="hover:text-white transition-colors">Why Us</button>
+        <button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('protocol')?.scrollIntoView(), 100); }} className="hover:text-white transition-colors">Protocol</button>
+        <button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('team')?.scrollIntoView(), 100); }} className="hover:text-white transition-colors">Team</button>
+        <button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('faq')?.scrollIntoView(), 100); }} className="hover:text-white transition-colors">FAQ</button>
       </div>
     </div>
     <button
@@ -296,46 +471,103 @@ const Protocol = () => (
 
 const Portfolio = () => (
   <section id="work" className="py-20 container mx-auto px-6">
-    <h2 className="text-4xl font-display font-bold mb-12 text-center">SELECTED WORKS</h2>
-    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 h-[600px]">
-      {/* Item 1 - Large */}
-      <div className="lg:col-span-2 lg:row-span-2 relative group overflow-hidden rounded-2xl bg-gradient-to-br from-orange-900 to-slate-900 border border-white/10">
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/40 backdrop-blur-sm">
-          <Play className="w-16 h-16 text-white fill-white" />
-        </div>
-        <div className="absolute bottom-0 left-0 p-6">
-          <h3 className="text-2xl font-bold font-display">Fintech Launch</h3>
-          <p className="text-sm text-gray-300">Campaign Strategy</p>
+    <div className="flex items-center justify-between mb-12">
+      <h2 className="text-4xl font-display font-bold text-white">SELECTED WORKS</h2>
+      <div className="flex items-center gap-2 text-xs font-mono text-green-400 bg-green-400/10 px-3 py-1 rounded-full border border-green-400/20">
+        <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
+        LIVE FEED
+      </div>
+    </div>
+
+    <VideoCarousel />
+  </section>
+);
+
+const WhyUs = () => (
+  <section id="why-us" className="py-32 container mx-auto px-6 relative">
+    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-orange/5 to-teal/5 rounded-full blur-[120px] -z-10" />
+
+    <div className="text-center mb-24 max-w-3xl mx-auto">
+      <h2 className="text-sm font-mono text-orange tracking-[0.2em] mb-4">THE GROWTH ENGINE</h2>
+      <h3 className="text-5xl md:text-6xl font-display font-bold mb-6">THE INVISIBLE BACKEND</h3>
+      <p className="text-xl text-gray-400">
+        We help agency founders scale from bottlenecks to breakthroughs. <br />
+        <span className="text-white font-bold">Your delivery, editing, and fulfillment—handled.</span>
+      </p>
+    </div>
+
+    <div className="grid md:grid-cols-3 gap-6">
+      {/* Card 1: Revenue - Large Span */}
+      <div className="md:col-span-2 relative group overflow-hidden rounded-3xl border border-white/10 bg-slate-900/50 hover:bg-slate-900 transition-all duration-300">
+        <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+        <div className="p-10 relative z-10 flex flex-col md:flex-row items-center gap-8">
+          <div className="flex-1">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 text-xs font-bold mb-6">
+              <TrendingUp className="w-3 h-3" />
+              REVENUE UNLOCKED
+            </div>
+            <h4 className="text-4xl font-display font-bold text-white mb-4">Add $40,000+ Monthly</h4>
+            <p className="text-gray-400 leading-relaxed text-lg">
+              Freedom to onboard <strong>20+ new clients</strong> without hiring a single employee. We handle the 100% of delivery chaos; you keep the profit.
+            </p>
+          </div>
+          <div className="w-full md:w-48 h-32 bg-slate-950 rounded-xl border border-white/5 flex flex-col items-center justify-center relative overflow-hidden">
+            <div className="absolute inset-0 bg-green-500/5 animate-pulse" />
+            <div className="text-3xl font-bold text-white mb-1">+$40k</div>
+            <div className="text-xs text-gray-500 font-mono">NEW REVENUE</div>
+          </div>
         </div>
       </div>
 
-      {/* Item 2 */}
-      <div className="relative group overflow-hidden rounded-2xl bg-gradient-to-bl from-teal-900 to-slate-900 border border-white/10">
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/40 backdrop-blur-sm">
-          <Play className="w-12 h-12 text-white fill-white" />
+      {/* Card 2: 24h Turnaround */}
+      <div className="relative group overflow-hidden rounded-3xl border border-white/10 bg-slate-900/50 hover:bg-slate-900 transition-all duration-300 p-8">
+        <div className="mb-6 p-4 bg-white/5 rounded-2xl w-fit group-hover:bg-white/10 transition-colors">
+          <Clock className="w-8 h-8 text-orange" />
         </div>
-        <div className="absolute bottom-0 left-0 p-6">
-          <h3 className="text-xl font-bold font-display">SaaS Promo</h3>
-        </div>
+        <h4 className="text-2xl font-bold text-white mb-3">24-Hour Speed</h4>
+        <p className="text-gray-400">
+          Zero chaos. We operate on a paramilitary schedule. Submissions in by 6PM, delivery by 6PM next day.
+        </p>
       </div>
 
-      {/* Item 3 */}
-      <div className="relative group overflow-hidden rounded-2xl bg-gradient-to-tr from-purple-900 to-slate-900 border border-white/10">
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/40 backdrop-blur-sm">
-          <Play className="w-12 h-12 text-white fill-white" />
+      {/* Card 3: White Label (Important) */}
+      <div className="relative group overflow-hidden rounded-3xl border border-white/10 bg-slate-900/50 hover:bg-slate-900 transition-all duration-300 p-8">
+        <div className="mb-6 p-4 bg-white/5 rounded-2xl w-fit group-hover:bg-white/10 transition-colors">
+          <Lock className="w-8 h-8 text-white" />
         </div>
-        <div className="absolute bottom-0 left-0 p-6">
-          <h3 className="text-xl font-bold font-display">Viral Reel</h3>
-        </div>
+        <h4 className="text-2xl font-bold text-white mb-3">100% White-Labeled</h4>
+        <p className="text-gray-400">
+          We are your secret weapon. We never, ever reach out to your clients. We handle the revisions; you take the credit.
+        </p>
       </div>
 
-      {/* Item 4 - Wide */}
-      <div className="lg:col-span-2 relative group overflow-hidden rounded-2xl bg-gradient-to-r from-gray-900 to-black border border-white/10">
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/40 backdrop-blur-sm">
-          <Play className="w-12 h-12 text-white fill-white" />
-        </div>
-        <div className="absolute bottom-0 left-0 p-6">
-          <h3 className="text-xl font-bold font-display">E-Com Scale</h3>
+      {/* Card 4: Quality Tech */}
+      <div className="md:col-span-2 relative group overflow-hidden rounded-3xl border border-white/10 bg-slate-900/50 hover:bg-slate-900 transition-all duration-300 p-10">
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold mb-6">
+              <CheckCircle2 className="w-3 h-3" />
+              QUALITY ASSURANCE
+            </div>
+            <h4 className="text-3xl font-display font-bold text-white mb-4">Editing by Strategy, Not Guesswork</h4>
+            <p className="text-gray-400 leading-relaxed max-w-md">
+              Our editors are trained operators. Every cut is driven by retention data, platform trends, and performance metrics. Detailed Quality Assurance process included.
+            </p>
+          </div>
+          <div className="space-y-4">
+            <div className="flex items-center gap-4 p-4 bg-slate-950 rounded-xl border border-white/5">
+              <div className="w-8 h-8 rounded-full bg-teal/20 flex items-center justify-center text-teal text-xs font-bold">01</div>
+              <div className="text-sm font-medium text-gray-300">Trend Analysis</div>
+            </div>
+            <div className="flex items-center gap-4 p-4 bg-slate-950 rounded-xl border border-white/5">
+              <div className="w-8 h-8 rounded-full bg-orange/20 flex items-center justify-center text-orange text-xs font-bold">02</div>
+              <div className="text-sm font-medium text-gray-300">Retention Editing</div>
+            </div>
+            <div className="flex items-center gap-4 p-4 bg-slate-950 rounded-xl border border-white/5">
+              <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 text-xs font-bold">03</div>
+              <div className="text-sm font-medium text-gray-300">Final Quality Assurance Check</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -345,7 +577,27 @@ const Portfolio = () => (
 const Founders = () => (
   <section id="team" className="py-32 container mx-auto px-6">
     <h2 className="text-4xl font-display font-bold mb-16 text-center">THE ARCHITECTS</h2>
-    <div className="grid md:grid-cols-2 gap-12 mb-20">
+    <div className="grid md:grid-cols-3 gap-8 mb-20">
+      {/* Avi Javeri - Head of Strategy */}
+      <div className="relative group rounded-3xl overflow-hidden border border-white/10 bg-slate-900 h-[500px]">
+        <div className="absolute inset-0">
+          <img src="/team/avi.jpg" alt="Avi Javeri" className="w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity duration-500 grayscale group-hover:grayscale-0" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent" />
+        </div>
+
+        <div className="relative z-10 p-8 h-full flex flex-col justify-end">
+          <div className="absolute top-10 right-10 p-3 bg-purple-500/10 rounded-xl text-purple-400 opacity-50 group-hover:opacity-100 transition-opacity backdrop-blur-md border border-purple-500/20">
+            <TrendingUp className="w-8 h-8" />
+          </div>
+
+          <h3 className="text-3xl font-display font-bold mb-2">AVI JAVERI</h3>
+          <p className="text-purple-400 font-mono text-sm tracking-widest mb-6">HEAD OF STRATEGY</p>
+          <p className="text-gray-300 text-base leading-relaxed">
+            "Growth is calculated, not accidental. I architect the master plan that aligns your content with revenue goals. We don't just consult; we engineer your market dominance."
+          </p>
+        </div>
+      </div>
+
       {/* Yadish - Head of Systems */}
       <div className="relative group rounded-3xl overflow-hidden border border-white/10 bg-slate-900 h-[500px]">
         <div className="absolute inset-0">
@@ -353,14 +605,14 @@ const Founders = () => (
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent" />
         </div>
 
-        <div className="relative z-10 p-10 h-full flex flex-col justify-end">
+        <div className="relative z-10 p-8 h-full flex flex-col justify-end">
           <div className="absolute top-10 right-10 p-3 bg-teal/10 rounded-xl text-teal opacity-50 group-hover:opacity-100 transition-opacity backdrop-blur-md border border-teal/20">
             <Code className="w-8 h-8" />
           </div>
 
-          <h3 className="text-4xl font-display font-bold mb-2">YADISH</h3>
+          <h3 className="text-3xl font-display font-bold mb-2">YADISH</h3>
           <p className="text-teal font-mono text-sm tracking-widest mb-6">HEAD OF SYSTEMS</p>
-          <p className="text-gray-300 text-lg leading-relaxed">
+          <p className="text-gray-300 text-base leading-relaxed">
             "Beautiful content is useless if it doesn't convert. I build the invisible infrastructure—the funnels, the automations, the code—that turns views into dollars."
           </p>
         </div>
@@ -373,14 +625,14 @@ const Founders = () => (
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent" />
         </div>
 
-        <div className="relative z-10 p-10 h-full flex flex-col justify-end">
+        <div className="relative z-10 p-8 h-full flex flex-col justify-end">
           <div className="absolute top-10 right-10 p-3 bg-orange/10 rounded-xl text-orange opacity-50 group-hover:opacity-100 transition-opacity backdrop-blur-md border border-orange/20">
             <Youtube className="w-8 h-8" />
           </div>
 
-          <h3 className="text-4xl font-display font-bold mb-2">CHAITANYA</h3>
+          <h3 className="text-3xl font-display font-bold mb-2">CHAITANYA</h3>
           <p className="text-orange font-mono text-sm tracking-widest mb-6">HEAD OF VISUALS</p>
-          <p className="text-gray-300 text-lg leading-relaxed">
+          <p className="text-gray-300 text-base leading-relaxed">
             "Attention is a currency. I don't just edit videos; I engineer psychological hooks that force the brain to keep watching. Every frame is a calculated decision."
           </p>
         </div>
@@ -469,49 +721,186 @@ const Founders = () => (
   </section>
 );
 
-const Testimonials = () => (
-  <section className="py-20 container mx-auto px-6">
-    <h2 className="text-4xl font-display font-bold mb-12 text-center">THE ROI</h2>
-    <div className="grid md:grid-cols-3 gap-6">
-      {[
-        { metric: "+$40k MRR", text: "The funnel Yadish built is printing money. Literally.", author: "SaaS Founder", handle: "@saas_king" },
-        { metric: "2.1M Views", text: "Chaitanya's editing style is unlike anything on the market.", author: "Coach X", handle: "@coach_x" },
-        { metric: "3x ROAS", text: "We stopped running ads and just used LBB organic content.", author: "E-com Brand", handle: "@ecom_scale" },
-        { metric: "150% Growth", text: "The team is a machine. They don't miss deadlines.", author: "Agency Owner", handle: "@agency_life" },
-        { metric: "Viral Hit", text: "First video they touched got 500k views. Insane.", author: "Fitness Influencer", handle: "@fit_pro" },
-        { metric: "Zero Churn", text: "Our clients stay because the content actually performs.", author: "Marketing Director", handle: "@cmo_daily" }
-      ].map((t, i) => (
-        <div key={i} className="p-6 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors flex flex-col h-full">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-700 to-gray-900" />
-              <div>
-                <div className="font-bold text-sm flex items-center gap-1">
-                  {t.author}
-                  <BadgeCheck className="w-3 h-3 text-blue-400 fill-blue-400/20" />
+const Testimonials = () => {
+  const testimonials = [
+    {
+      name: "Cody Horn",
+      role: "Community Coach",
+      text: "As a busy coach focused on my community, I needed a content team I could trust completely, and handing everything over to them was the single best decision for my business. Their support is unparalleled. From sharp scripting with viral hooks to the incredible technical skill in their edits—like the muscle CGI overlays—they consistently deliver.",
+      img: "/testimonials/Cody horn.jpg",
+      metric: "Primary Revenue Driver"
+    },
+    {
+      name: "Stephanie",
+      role: "Influencer",
+      text: "I dedicate my incredible growth entirely to the team at Let's Build Brand. When we started 4 months ago, I was at 10k followers; today, I'm at 550k. This would have been impossible without their expert strategy and their amazing video editing team.",
+      img: "/testimonials/stephanie.jpg",
+      metric: "10k → 550k Followers"
+    },
+    {
+      name: "Johann De Silva",
+      role: "Martial Arts Instructor",
+      text: "It's rare to find a creative team that truly listens and executes with such precision. They took my vision for my Taekwon-Do content and captured the energy and discipline of the art form in every edit. The final videos were exactly my dream style, only better.",
+      img: "/testimonials/Joahnn De Silva.jpg",
+      metric: "Perfect Execution"
+    },
+    {
+      name: "Innerlink",
+      role: "Agency Partner",
+      text: "We gave them an incredibly demanding project: 60 videos in just 10 days. Not only did they deliver on time, but the quality was exceptional. Their systematic process, which included three rounds of quality checks, ensured every video was perfect.",
+      img: "/testimonials/innerlink.jpg",
+      metric: "60 Videos in 10 Days"
+    },
+    {
+      name: "Avi Javeri",
+      role: "Strategist",
+      text: "They are the complete package. From developing a winning content strategy and scripts to delivering flawless video edits, they managed it all. But what truly sets them apart is their genuine support. They were true partners who hand-held me through the process.",
+      img: "/testimonials/avi javeri.jpg",
+      metric: "Complete Package"
+    },
+    {
+      name: "Joni",
+      role: "Creative Partner",
+      text: "I'm speechless. What this team created wasn't just a video, it was a true piece of art. Beyond the phenomenal editing, what really stood out was their personal touch. They helped with strategy, gave inspiration for how to shoot, and offered incredible support.",
+      img: "/testimonials/joni.jpg",
+      metric: "True Art"
+    },
+    {
+      name: "Jason",
+      role: "Content Creator",
+      text: "The video edits were absolutely insane—they completely blew me away. This team doesn't just deliver; they surprise you with their level of expertise and dedication. The quality was perfect, and their supportive attitude made the collaboration seamless. Highly recommend for anyone looking for exceptional results.",
+      img: "/testimonials/jason.jpg",
+      metric: "Exceptional Quality"
+    },
+    {
+      name: "Beknown Brand",
+      role: "B2B Partner",
+      text: "High-quality work, quick turnarounds, and extremely affordable. A solid B2B backend partner. Deliveries of 120 videos within a month were completed smoothly.",
+      img: "/testimonials/beknown brand.jpg",
+      metric: "120 Videos/Month"
+    },
+    {
+      name: "Mohan",
+      role: "Agency Partner",
+      text: "As a backend B2B partner, Chaitanya & Yadish and their team have been exceptional. Quick deliveries, consistently high-quality work, and extremely affordable rates make them a reliable extension of our operations. Professional, efficient, and dependable.",
+      img: "/testimonials/mohan.jpg",
+      metric: "Reliable Extension"
+    },
+    {
+      name: "Lua Filmmaker",
+      role: "Filmmaker",
+      text: "Excellent and fantastic cinematic video editing with exceptional attention to detail.",
+      img: "/testimonials/lua.jpg",
+      metric: "Cinematic Detail"
+    },
+    {
+      name: "PUK Promotions",
+      role: "Brand",
+      text: "Chaitanya and his team delivered exceptional results. The advanced Al VFX, cinematic CGI, and smoke effects were executed flawlessly with impressive speed. Communication was clear, delivery was fast, and the final output felt truly premium.",
+      img: "/testimonials/PUK promotions.jpg",
+      metric: "Advanced AI VFX"
+    },
+    {
+      name: "And 50+ More",
+      role: "Global Partners",
+      text: "We've silently scaled dozens of other brands across 3 continents. The system works universally. The only variable missing is you. Are you ready to stop guessing and start dominating?",
+      img: "special_plus",
+      metric: "You're Next"
+    }
+  ];
+
+  return (
+    <section className="py-24 container mx-auto px-6">
+      <h2 className="text-4xl md:text-5xl font-display font-bold mb-4 text-center">THE VERDICT</h2>
+      <p className="text-gray-400 text-center mb-16 max-w-2xl mx-auto">
+        We don't chase likes. We chase revenue, reputation, and retention. Here is the data from the frontlines.
+      </p>
+
+      {/* Masonry-style Grid */}
+      <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+        {testimonials.map((t, i) => (
+          <div key={i} className="break-inside-avoid relative group">
+            <div className={`absolute inset-0 rounded-2xl blur-xl opacity-0 group-hover:opacity-50 transition-opacity duration-500 ${t.img === 'special_plus' ? 'bg-orange/40' : 'bg-gradient-to-r from-orange/20 to-teal/20'}`} />
+            <div className={`relative border p-6 rounded-2xl backdrop-blur-sm transition-colors duration-300 ${t.img === 'special_plus' ? 'bg-orange/10 border-orange/20 hover:bg-orange/20' : 'bg-slate-900/50 border-white/10 hover:bg-slate-900'}`}>
+              <div className="flex items-center gap-4 mb-6">
+                <div className="relative">
+                  {t.img === 'special_plus' ? (
+                    <div className="w-14 h-14 rounded-full bg-orange flex items-center justify-center border-2 border-white/10 text-black">
+                      <Users className="w-6 h-6" />
+                    </div>
+                  ) : (
+                    <img src={t.img} alt={t.name} className="w-14 h-14 rounded-full object-cover border-2 border-white/10" />
+                  )}
+                  <div className="absolute -bottom-1 -right-1 bg-black rounded-full p-0.5 border border-white/20">
+                    <BadgeCheck className="w-4 h-4 text-blue-400 fill-blue-400/10" />
+                  </div>
                 </div>
-                <div className="text-xs text-gray-500">{t.handle}</div>
+                <div>
+                  <h4 className={`font-bold font-display leading-tight ${t.img === 'special_plus' ? 'text-orange' : 'text-white'}`}>{t.name}</h4>
+                  <p className="text-xs text-gray-500 font-mono uppercase tracking-wider">{t.role}</p>
+                </div>
+              </div>
+
+              <p className={`text-sm leading-relaxed mb-6 ${t.img === 'special_plus' ? 'text-white font-medium' : 'text-gray-300'}`}>
+                "{t.text}"
+              </p>
+
+              <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-bold ${t.img === 'special_plus' ? 'bg-orange text-black border-orange' : 'bg-white/5 border-white/10 text-teal'}`}>
+                <TrendingUp className="w-3.5 h-3.5" />
+                {t.metric}
               </div>
             </div>
-            <div className="text-teal font-bold text-xs bg-teal/10 px-2 py-1 rounded border border-teal/20">
-              {t.metric}
-            </div>
           </div>
-          <p className="text-gray-300 text-sm leading-relaxed flex-1">"{t.text}"</p>
-        </div>
-      ))}
-    </div>
-  </section>
-);
+        ))}
+      </div>
+    </section>
+  );
+};
 
 const FAQ = () => {
   const [openIndex, setOpenIndex] = useState(null);
 
   const faqs = [
-    { q: "Why are you more expensive than freelancers?", a: "Because we don't just 'edit'. We engineer assets that generate revenue. You aren't paying for time; you're paying for the 8-person team and the system that guarantees quality at scale." },
-    { q: "What is the turnaround time?", a: "48-72 hours for standard deliverables. We move fast because money loves speed." },
-    { q: "Do you handle the strategy or just execution?", a: "Both. We audit your current leaks, build the roadmap, and then execute the content and funnels to fix them." },
-    { q: "Can I just hire you for editing?", a: "Yes, but our highest ROI comes from the full 'Content + Funnel' ecosystem. We prefer partners who want to dominate, not just post." }
+    {
+      q: "Who is this service built for?",
+      a: "This is built specifically for agencies and professional creators who want consistent, high-quality video delivery without hiring, training, or managing an internal editing team. If you sell video services, we become your invisible backend team."
+    },
+    {
+      q: "How fast is your turnaround time?",
+      a: "Most videos are delivered within 24 hours. Larger or complex projects may take slightly longer—but timelines are always clearly communicated upfront. Speed without compromising quality is our core system."
+    },
+    {
+      q: "Is this a white-labeled service?",
+      a: "Yes. 100% white-labeled. Your clients never know we exist. All communication, files, and deliveries are handled under your brand identity."
+    },
+    {
+      q: "How do you maintain consistent quality?",
+      a: "Every video goes through a 3-step process: \n1. Assigned editor based on video style \n2. Internal Quality Assurance review \n3. Final export check before delivery \nThis ensures consistency—even at high volumes."
+    },
+    {
+      q: "How do revisions work?",
+      a: "We handle 2 Free revisions as per your client’s feedback. A 3rd revision costs some percentage of the video budget. You don’t deal with back-and-forth—we manage the entire revision cycle for you."
+    },
+    {
+      q: "Can you match different editing styles and trends?",
+      a: "Absolutely. We work with style-specific editors and continuously adapt to platform trends across Instagram, YouTube, TikTok, and ads. Your content stays relevant, not outdated."
+    },
+    {
+      q: "How many videos can you handle per month?",
+      a: "Our system supports 500+ videos per month without quality drop. Whether you have 5 clients or 50, our infrastructure scales with you."
+    },
+    {
+      q: "Will my clients be updated during the process?",
+      a: "Yes. We provide real-time updates and clear status tracking so nothing goes silent. This protects your client relationships and builds long-term trust."
+    },
+    {
+      q: "What makes you different from freelancers or in-house editors?",
+      a: "Freelancers disappear. Employees need training, salaries, and management. We provide: Zero hiring headaches, No turnover risk, Predictable delivery, and Proven systems. You focus on growth, not operations."
+    },
+    {
+      q: "How do we get started?",
+      a: "Book a strategy call. We understand your workflow, volume, and style—then plug in seamlessly. New brands currently get a FLAT 10% OFF."
+    }
   ];
 
   return (
@@ -711,6 +1100,210 @@ const GlobalOperations = () => {
   );
 };
 
+// --- Add new imports to the list at the top first if not present, but for this tool I will assume I need to add the Footer component definition and then use it.
+// Wait, I can't edit imports and the footer location easily in one go if they are far apart.
+// I will just define the Footer component before App and replace the footer in App.
+// Actually, I should update the imports first or use existing icons or generic SVGs? 
+// I have 'MapPin' and 'Mail' in my plan but I need to check if they are imported.
+// Step 70 shows imports: ... Layers, BarChart3, Lock, Volume2, VolumeX.
+// I need to add MapPin, Mail, Linkedin, Twitter (or similar) to imports.
+
+const Footer = ({ onNavigate }) => (
+  <footer className="bg-slate-950 pt-20 pb-10 border-t border-white/10 relative overflow-hidden">
+    <div className="absolute inset-0 bg-noise opacity-5" />
+    <div className="container mx-auto px-6 relative z-10">
+      <div className="grid md:grid-cols-4 gap-12 mb-16">
+        {/* Brand & Address */}
+        <div className="md:col-span-2">
+          <div className="text-3xl font-bold font-display tracking-tighter text-white mb-6">LBB.</div>
+          <p className="text-gray-400 mb-8 max-w-sm leading-relaxed">
+            We engineer attention for brands that define culture. A paramilitary creative unit dedicated to high-ticket retention and revenue.
+          </p>
+
+          <div className="flex items-start gap-3 text-gray-400 mb-4">
+            <MapPin className="w-5 h-5 text-orange mt-1 shrink-0" />
+            <div className="text-sm leading-relaxed">
+              <span className="text-white font-bold block mb-1">HEADQUARTERS</span>
+              201, Wing-B, Cube Vastu,<br />
+              Kanchanwadi, Chhatrapati Sambhajinagar (Aurangabad),<br />
+              Maharashtra - 431011
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Links */}
+        <div>
+          <h4 className="text-white font-bold font-display mb-6">EXPLORE</h4>
+          <ul className="space-y-4 text-sm text-gray-400">
+            <li><button onClick={() => onNavigate('home')} className="hover:text-orange transition-colors">Home</button></li>
+            <li><button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('work')?.scrollIntoView(), 100); }} className="hover:text-orange transition-colors">Selected Work</button></li>
+            <li><button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('why-us')?.scrollIntoView(), 100); }} className="hover:text-orange transition-colors">Why Us</button></li>
+            <li><button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('protocol')?.scrollIntoView(), 100); }} className="hover:text-orange transition-colors">The Protocol</button></li>
+            <li><button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('team')?.scrollIntoView(), 100); }} className="hover:text-orange transition-colors">The Unit</button></li>
+            <li><button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('faq')?.scrollIntoView(), 100); }} className="hover:text-orange transition-colors">FAQ</button></li>
+          </ul>
+        </div>
+
+        {/* Connect */}
+        <div>
+          <h4 className="text-white font-bold font-display mb-6">CONNECT</h4>
+          <ul className="space-y-4 text-sm text-gray-400">
+            <li>
+              <a href="mailto:yadish@letsbuildbrand.com" className="flex items-center gap-2 hover:text-teal transition-colors">
+                <Mail className="w-4 h-4" />
+                yadish@letsbuildbrand.com
+              </a>
+            </li>
+            <li className="flex gap-4 pt-2">
+              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 hover:text-white transition-all text-gray-400 border border-white/5">
+                <Linkedin className="w-4 h-4" />
+              </a>
+              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 hover:text-white transition-all text-gray-400 border border-white/5">
+                <Twitter className="w-4 h-4" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-600 font-mono">
+        <div>&copy; {new Date().getFullYear()} Let's Build Brand. All rights reserved.</div>
+        <div className="flex gap-8">
+          <button onClick={() => onNavigate('privacy')} className="hover:text-gray-400 transition-colors uppercase">PRIVACY POLICY</button>
+          <button onClick={() => onNavigate('terms')} className="hover:text-gray-400 transition-colors uppercase">TERMS OF SERVICE</button>
+        </div>
+      </div>
+    </div>
+  </footer>
+);
+
+const TermsOfService = () => (
+  <section className="pt-32 pb-20 container mx-auto px-6 min-h-screen text-gray-300">
+    <div className="max-w-4xl mx-auto">
+      <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">TERMS OF SERVICE</h1>
+      <p className="text-gray-500 mb-12">Last updated: {new Date().toLocaleDateString()}</p>
+
+      <div className="space-y-12 leading-relaxed">
+        <div>
+          <h3 className="text-xl font-bold text-white mb-4">1. THE LBB PROTOCOL & CREDIT SYSTEM</h3>
+          <p className="mb-4">
+            Let's Build Brand ("LBB") operates on a flexible, currency-based model designed for speed and scalability. All services are exchanged for <strong>LBB Credits</strong>.
+          </p>
+          <ul className="list-disc pl-5 space-y-2 text-gray-400">
+            <li><strong>Credit Packages:</strong> Credits are purchased in prepaid packages. The cost per credit varies based on the specific promotional offer or volume deal active at the time of purchase.</li>
+            <li><strong>Expiration Policy:</strong> To ensure our team's availability and schedule integrity, purchased credits have a lifespan of <strong>60 days</strong> from the date of invoice payment. Unused credits after this period are subject to expiration.</li>
+            <li><strong>Valuation:</strong> Content complexity dictates usage.
+              <ul className="list-disc pl-5 mt-2 space-y-1 text-gray-500">
+                <li>Standard Short-Form content starts at <strong>1 Credit per video</strong>.</li>
+                <li>Long-Form content and complex visual effects are quoted custom credits.</li>
+              </ul>
+            </li>
+            <li><strong>Fair Scope Agreement:</strong> Final credit cost is mutually agreed upon before work commences, based on the provided reference video and scope. Any mid-project changes to the requirements will induce a re-calculation of the credit cost.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 className="text-xl font-bold text-white mb-4">2. TURNAROUND & DELIVERY</h3>
+          <p>
+            We operate on a <strong>24-Hour Turnaround Time</strong> standard for routine edits and ongoing subscriptions.
+            <br /><br />
+            Please note:
+            High-complexity projects (e.g., 3D motion graphics, 10min+ documentaries) may require extended timelines, which will be communicated explicitly via your Client Dashboard.
+          </p>
+        </div>
+
+        <div>
+          <h3 className="text-xl font-bold text-white mb-4">3. CLIENT DASHBOARD & WORKFLOW</h3>
+          <p className="mb-4">
+            Access to our proprietary <strong>LBB Client Dashboard</strong> is granted upon onboarding. This tool is the single source of truth for our partnership.
+          </p>
+          <ul className="list-disc pl-5 space-y-2 text-gray-400">
+            <li><strong>Requests:</strong> All new edits must be submitted via the Dashboard to ensure proper tracking.</li>
+            <li><strong>Communication:</strong> Direct lines to your Project Manager and Editor are facilitated within the platform.</li>
+            <li><strong>Tracking:</strong> Real-time status updates (In Queue, Editing, Review, Completed) and Credit Ledger history are visible 24/7.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 className="text-xl font-bold text-white mb-4">4. GLOBAL SUPPORT</h3>
+          <p>
+            While our creatives operate globally to ensure 24-hour coverage, our Headquarters and administrative support are based in the <strong>USA</strong>. Support tickets raised regarding billing, credits, or account management are handled by our US team.
+          </p>
+        </div>
+
+        <div>
+          <h3 className="text-xl font-bold text-white mb-4">5. INTELLECTUAL PROPERTY</h3>
+          <p>
+            Upon final credit deduction, full copyright of the finished produced video files is transferred to the Client. LBB retains the right to display the work in our portfolio unless a Non-Disclosure Agreement (NDA) has been signed.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
+const PrivacyPolicy = () => (
+  <section className="pt-32 pb-20 container mx-auto px-6 min-h-screen text-gray-300">
+    <div className="max-w-4xl mx-auto">
+      <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">PRIVACY POLICY</h1>
+      <p className="text-gray-500 mb-12">Last updated: {new Date().toLocaleDateString()}</p>
+
+      <div className="space-y-12 leading-relaxed">
+        <div>
+          <h3 className="text-xl font-bold text-white mb-4">DATA COLLECTION & USAGE</h3>
+          <p>
+            We collect information strictly necessary to execute our services: Name, Email, Billing Information, and Raw Content Assets (Video/Audio files).
+            <br /><br />
+            Your data is primarily used within the <strong>LBB Client Dashboard</strong> to:
+          </p>
+          <ul className="list-disc pl-5 mt-2 space-y-1 text-gray-400">
+            <li>Facilitate project management and communication.</li>
+            <li>Track credit usage and project progress.</li>
+            <li>Ensure legal compliance and secure asset delivery.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 className="text-xl font-bold text-white mb-4">ASSET SECURITY</h3>
+          <p>
+            All raw footage and assets uploaded to our system are stored on secure, encrypted cloud servers. Access is restricted strictly to the assigned creative team (Editors, Project Managers) and is revoked once the project is archived.
+          </p>
+        </div>
+
+        <div>
+          <h3 className="text-xl font-bold text-white mb-4">THIRD-PARTY SHARING</h3>
+          <p>
+            We do not sell your personal data. We may share necessary data with trusted third-party infrastructure providers (e.g., Stripe for payments, Cloud Storage providers) solely for the purpose of maintaining service functionality.
+          </p>
+        </div>
+
+        <div>
+          <h3 className="text-xl font-bold text-white mb-4">CONTACT US</h3>
+          <p>
+            For privacy-related inquiries or to request data deletion, please contact our USA Headquarters support team via the Dashboard or email hello@letsbuildbrand.com.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
+const Home = ({ onOpenModal }) => (
+  <>
+    <Hero />
+    <Marquee />
+    <Protocol />
+    <Portfolio />
+    <WhyUs />
+    <MidSectionCTA onOpenModal={onOpenModal} />
+    <Founders />
+    <GlobalOperations />
+    <Testimonials />
+    <FAQ />
+    <FinalCTA onOpenModal={onOpenModal} />
+  </>
+);
+
 const BookingModal = ({ isOpen, onClose }) => {
   // Reset state when modal opens/closes
   useEffect(() => {
@@ -784,29 +1377,26 @@ const BookingModal = ({ isOpen, onClose }) => {
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState('home');
+
+  const navigateTo = (page) => {
+    setCurrentPage(page);
+    window.scrollTo(0, 0);
+  };
 
   return (
     <div className="bg-premium-dark min-h-screen text-white selection:bg-orange selection:text-white">
       <div className="bg-noise" />
 
-      <Navbar onOpenModal={() => setIsModalOpen(true)} />
+      <Navbar onOpenModal={() => setIsModalOpen(true)} onNavigate={navigateTo} />
 
       <main>
-        <Hero />
-        <Marquee />
-        <Protocol />
-        <Portfolio />
-        <MidSectionCTA onOpenModal={() => setIsModalOpen(true)} />
-        <Founders />
-        <GlobalOperations />
-        <Testimonials />
-        <FAQ />
-        <FinalCTA onOpenModal={() => setIsModalOpen(true)} />
+        {currentPage === 'home' && <Home onOpenModal={() => setIsModalOpen(true)} />}
+        {currentPage === 'terms' && <TermsOfService />}
+        {currentPage === 'privacy' && <PrivacyPolicy />}
       </main>
 
-      <footer className="py-8 text-center text-gray-600 text-sm border-t border-white/5 relative z-10 bg-black">
-        <p>&copy; 2025 Let's Build Brand. All rights reserved.</p>
-      </footer>
+      <Footer onNavigate={navigateTo} />
 
       <BookingModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
