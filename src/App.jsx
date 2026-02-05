@@ -16,6 +16,7 @@ import createGlobe from 'cobe';
 const VideoCarousel = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isMuted, setIsMuted] = useState(true);
+  const videoRefs = React.useRef([]);
 
   const videos = [
     { id: 1, src: "/videos/1.mp4", title: "High-Performance Funnel", tag: "STRATEGY" },
@@ -26,80 +27,58 @@ const VideoCarousel = () => {
     { id: 6, src: "/videos/6.mp4", title: "Viral Framework", tag: "ORGANIC" }
   ];
 
-  // Auto-scroll every 3 seconds
+  // Auto-scroll every 5 seconds (slower for better viewing)
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveIndex((current) => (current + 1) % videos.length);
-    }, 3000);
+    }, 5000);
     return () => clearInterval(interval);
   }, [videos.length]);
+
+  // Ensure active video plays and others are correctly handled
+  useEffect(() => {
+    videoRefs.current.forEach((video, index) => {
+      if (video) {
+        if (index === activeIndex) {
+          video.play().catch(() => { }); // Attempt to play active
+          video.muted = isMuted; // Sync mute state
+        } else {
+          // Optional: pause others to save resources, or keep playing for effect. 
+          // User said "all videos should start playing", so we keep them playing but muted.
+          video.muted = true;
+          video.play().catch(() => { });
+        }
+      }
+    });
+  }, [activeIndex, isMuted]);
 
   const getPositionStyles = (index) => {
     const distance = (index - activeIndex + videos.length) % videos.length;
 
     // Center Item
     if (distance === 0) {
-      return {
-        x: 0,
-        scale: 1,
-        zIndex: 20,
-        opacity: 1,
-        rotateY: 0
-      };
+      return { x: 0, scale: 1, zIndex: 20, opacity: 1, rotateY: 0, filter: 'brightness(1)' };
     }
 
-    // Right Item (immediate next)
+    // Right Item
     if (distance === 1) {
-      return {
-        x: 220, // Reduced spacing for smoother look
-        scale: 0.85, // Sligthly larger for better flow
-        zIndex: 10,
-        opacity: 0.7, // Increased visibility
-        rotateY: -10
-      };
+      return { x: 200, scale: 0.8, zIndex: 10, opacity: 0.6, rotateY: -15, filter: 'brightness(0.5)' };
     }
 
-    // Left Item (previous / last)
+    // Left Item
     if (distance === videos.length - 1) {
-      return {
-        x: -220,
-        scale: 0.85,
-        zIndex: 10,
-        opacity: 0.7,
-        rotateY: 10
-      };
+      return { x: -200, scale: 0.8, zIndex: 10, opacity: 0.6, rotateY: 15, filter: 'brightness(0.5)' };
     }
 
-    // Creating a smoother "back" layer
-    // Right + 2
+    // Back Layers
     if (distance === 2) {
-      return {
-        x: 380,
-        scale: 0.7,
-        zIndex: 5,
-        opacity: 0.4,
-        rotateY: -20
-      };
+      return { x: 350, scale: 0.6, zIndex: 5, opacity: 0.3, rotateY: -30, filter: 'brightness(0.3)' };
     }
-
-    // Left + 2
     if (distance === videos.length - 2) {
-      return {
-        x: -380,
-        scale: 0.7,
-        zIndex: 5,
-        opacity: 0.4,
-        rotateY: 20
-      };
+      return { x: -350, scale: 0.6, zIndex: 5, opacity: 0.3, rotateY: 30, filter: 'brightness(0.3)' };
     }
 
-    // Default hidden/back
-    return {
-      x: 0,
-      scale: 0,
-      zIndex: 0,
-      opacity: 0
-    };
+    return { x: 0, scale: 0, zIndex: 0, opacity: 0 };
   };
 
   return (
@@ -115,15 +94,16 @@ const VideoCarousel = () => {
               className="absolute w-[280px] md:w-[320px] aspect-[9/16] rounded-3xl overflow-hidden shadow-2xl bg-black border border-white/10"
               initial={styles}
               animate={styles}
-              transition={{ duration: 0.6, ease: [0.32, 0.72, 0, 1] }} // Updated easing for "cycling type" smooth feel
+              transition={{ duration: 0.8, ease: "circOut" }} // Smoother transition
             >
               <video
+                ref={el => videoRefs.current[index] = el}
                 src={video.src}
                 className="w-full h-full object-cover"
                 autoPlay
                 loop
-                muted={isActive ? isMuted : true} // Only potentially unmute the active one
                 playsInline
+                muted={isActive ? isMuted : true}
               />
               {/* Overlay Content */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80" />
@@ -857,6 +837,63 @@ const Testimonials = () => {
   );
 };
 
+const ProofOfConcepts = () => {
+  const allImages = Array.from({ length: 46 }, (_, i) => `/pow/${i + 1}.jpg`);
+  // Split images for two logical rows
+  const row1 = allImages.slice(0, 23);
+  const row2 = allImages.slice(23, 46);
+
+  return (
+    <section className="py-24 border-t border-white/5 bg-black/20 overflow-hidden">
+      <div className="text-center mb-16">
+        <h3 className="text-sm font-mono text-gray-500 uppercase tracking-[0.3em] mb-2">The Receipts</h3>
+        <h2 className="text-3xl font-display font-bold text-white">PROVEN RESULTS</h2>
+      </div>
+
+      {/* Container for the two rows */}
+      <div className="space-y-4">
+        {/* Row 1 - Left to Right */}
+        <div className="flex overflow-hidden relative mask-gradient">
+          <div
+            className="flex whitespace-nowrap animate-scroll hover:pause gap-4"
+            style={{ animationDuration: '60s' }}
+          >
+            {[...row1, ...row1, ...row1].map((src, i) => (
+              <div key={i} className="min-w-[300px] h-60 shrink-0 rounded-xl overflow-hidden border border-white/10 bg-slate-900/50 relative group">
+                <div className="absolute inset-0 bg-slate-800 animate-pulse z-0" />
+                <img
+                  src={src}
+                  alt={`Proof Row 1 ${i}`}
+                  className="relative z-10 h-full w-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Row 2 - Right to Left */}
+        <div className="flex overflow-hidden relative mask-gradient">
+          <div
+            className="flex whitespace-nowrap animate-scroll hover:pause gap-4"
+            style={{ animationDuration: '70s', animationDirection: 'reverse' }}
+          >
+            {[...row2, ...row2, ...row2].map((src, i) => (
+              <div key={i} className="min-w-[300px] h-60 shrink-0 rounded-xl overflow-hidden border border-white/10 bg-slate-900/50 relative group">
+                <div className="absolute inset-0 bg-slate-800 animate-pulse z-0" />
+                <img
+                  src={src}
+                  alt={`Proof Row 2 ${i}`}
+                  className="relative z-10 h-full w-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const FAQ = () => {
   const [openIndex, setOpenIndex] = useState(null);
 
@@ -1299,6 +1336,7 @@ const Home = ({ onOpenModal }) => (
     <Founders />
     <GlobalOperations />
     <Testimonials />
+    <ProofOfConcepts />
     <FAQ />
     <FinalCTA onOpenModal={onOpenModal} />
   </>
