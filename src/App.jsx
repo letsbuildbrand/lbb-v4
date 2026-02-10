@@ -43,10 +43,9 @@ const VideoCarousel = ({ unmutedId, setUnmutedId }) => {
           video.play().catch(() => { }); // Attempt to play active
           video.muted = !isCarouselUnmuted; // Sync mute state
         } else {
-          // Optional: pause others to save resources, or keep playing for effect. 
-          // User said "all videos should start playing", so we keep them playing but muted.
-          video.muted = true;
-          video.play().catch(() => { });
+          // Optimization: Pause non-active videos to save resources
+          video.pause();
+          video.currentTime = 0; // Optional: Reset to start
         }
       }
     });
@@ -452,6 +451,34 @@ const LongFormShowcase = ({ unmutedId, setUnmutedId }) => {
     { id: 'long3', src: "/videos/long3.mp4", title: "Framework Analysis" }
   ];
 
+  const videoRefs = React.useRef({});
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const video = entry.target;
+          if (entry.isIntersecting) {
+            video.play().catch(() => { });
+          } else {
+            video.pause();
+          }
+        });
+      },
+      { threshold: 0.5 } // Play when 50% visible
+    );
+
+    Object.values(videoRefs.current).forEach((video) => {
+      if (video) observer.observe(video);
+    });
+
+    return () => {
+      Object.values(videoRefs.current).forEach((video) => {
+        if (video) observer.unobserve(video);
+      });
+    };
+  }, []);
+
   return (
     <div className="mt-32 grid md:grid-cols-3 gap-8">
       {videos.map((video) => {
@@ -459,12 +486,13 @@ const LongFormShowcase = ({ unmutedId, setUnmutedId }) => {
         return (
           <div key={video.id} className="relative aspect-video bg-slate-900 rounded-2xl overflow-hidden border border-white/10 group shadow-2xl">
             <video
+              ref={(el) => (videoRefs.current[video.id] = el)}
               src={video.src}
               className="w-full h-full object-cover"
-              autoPlay
               loop
               muted={!isUnmuted}
               playsInline
+              preload="metadata" // Optimization: Load metadata only initially
             />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors pointer-events-none" />
 
