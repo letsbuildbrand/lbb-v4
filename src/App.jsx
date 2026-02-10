@@ -13,9 +13,9 @@ import createGlobe from 'cobe';
 
 // ... (Navbar, Hero, InteractiveCore, Marquee, Protocol components remain unchanged)
 
-const VideoCarousel = () => {
+const VideoCarousel = ({ unmutedId, setUnmutedId }) => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isMuted, setIsMuted] = useState(true);
+  const isCarouselUnmuted = unmutedId === 'carousel';
   const videoRefs = React.useRef([]);
 
   const videos = [
@@ -41,7 +41,7 @@ const VideoCarousel = () => {
       if (video) {
         if (index === activeIndex) {
           video.play().catch(() => { }); // Attempt to play active
-          video.muted = isMuted; // Sync mute state
+          video.muted = !isCarouselUnmuted; // Sync mute state
         } else {
           // Optional: pause others to save resources, or keep playing for effect. 
           // User said "all videos should start playing", so we keep them playing but muted.
@@ -50,7 +50,7 @@ const VideoCarousel = () => {
         }
       }
     });
-  }, [activeIndex, isMuted]);
+  }, [activeIndex, isCarouselUnmuted]);
 
   const getPositionStyles = (index) => {
     const distance = (index - activeIndex + videos.length) % videos.length;
@@ -103,7 +103,7 @@ const VideoCarousel = () => {
                 autoPlay
                 loop
                 playsInline
-                muted={isActive ? isMuted : true}
+                muted={isActive ? !isCarouselUnmuted : true}
               />
               {/* Overlay Content */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80" />
@@ -138,10 +138,10 @@ const VideoCarousel = () => {
         </button>
 
         <button
-          onClick={() => setIsMuted(!isMuted)}
-          className={`group flex items-center gap-2 px-6 py-3 rounded-full font-bold font-display text-sm uppercase tracking-wide transition-all shadow-lg ${isMuted ? 'bg-white text-black hover:bg-gray-200' : 'bg-slate-900 text-white border border-white/10 hover:bg-slate-800'}`}
+          onClick={() => setUnmutedId(isCarouselUnmuted ? null : 'carousel')}
+          className={`group flex items-center gap-2 px-6 py-3 rounded-full font-bold font-display text-sm uppercase tracking-wide transition-all shadow-lg ${!isCarouselUnmuted ? 'bg-white text-black hover:bg-gray-200' : 'bg-slate-900 text-white border border-white/10 hover:bg-slate-800'}`}
         >
-          {isMuted ? (
+          {!isCarouselUnmuted ? (
             <>
               <VolumeX className="w-4 h-4" />
               Unmute Center
@@ -201,7 +201,7 @@ const Hero = () => (
           className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-orange mb-6"
         >
           <Zap className="w-3 h-3" />
-          <span>ACCEPTING 2 NEW PARTNERS FOR Q4</span>
+          <span>ACCEPTING 4 NEW PARTNERS FOR Q2</span>
         </motion.div>
 
         <motion.h1
@@ -340,14 +340,12 @@ const InteractiveCore = () => {
                 className="flex items-center gap-4 w-full p-3 bg-white/5 rounded-lg border border-white/5 shadow-lg"
                 animate={{ x: mousePosition.x * 30, y: mousePosition.y * 30 }}
               >
-                <div className="w-8 h-8 rounded bg-orange/20 flex items-center justify-center text-orange">
+                <div className="w-8 h-8 rounded bg-orange/20 flex items-center justify-center text-orange shrink-0">
                   <Play className="w-4 h-4 fill-current" />
                 </div>
-                <div className="flex-1">
-                  <div className="h-2 w-16 bg-white/20 rounded mb-1" />
-                  <div className="h-1.5 w-8 bg-white/10 rounded" />
+                <div className="flex-1 font-mono text-xs text-gray-300">
+                  <span className="text-green-400 font-bold">84%</span> Client Retention Rate
                 </div>
-                <div className="text-xs text-green-400 font-mono">+42%</div>
               </motion.div>
 
               <motion.div
@@ -357,11 +355,9 @@ const InteractiveCore = () => {
                 <div className="w-8 h-8 rounded bg-teal/20 flex items-center justify-center text-teal">
                   <BarChart3 className="w-4 h-4" />
                 </div>
-                <div className="flex-1">
-                  <div className="h-2 w-20 bg-white/20 rounded mb-1" />
-                  <div className="h-1.5 w-12 bg-white/10 rounded" />
+                <div className="flex-1 font-mono text-xs text-gray-300">
+                  <span className="text-green-400 font-bold">2,400+</span> Projects Delivered
                 </div>
-                <div className="text-xs text-green-400 font-mono">$12.4k</div>
               </motion.div>
             </div>
           </div>
@@ -449,19 +445,67 @@ const Protocol = () => (
   </section>
 );
 
-const Portfolio = () => (
-  <section id="work" className="py-20 container mx-auto px-6">
-    <div className="flex items-center justify-between mb-12">
-      <h2 className="text-4xl font-display font-bold text-white">SELECTED WORKS</h2>
-      <div className="flex items-center gap-2 text-xs font-mono text-green-400 bg-green-400/10 px-3 py-1 rounded-full border border-green-400/20">
-        <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
-        LIVE FEED
-      </div>
-    </div>
+const LongFormShowcase = ({ unmutedId, setUnmutedId }) => {
+  const videos = [
+    { id: 'long1', src: "/videos/long1.mp4", title: "Strategy Breakdown" },
+    { id: 'long2', src: "/videos/long2.mp4", title: "Execution Plan" },
+    { id: 'long3', src: "/videos/long3.mp4", title: "Framework Analysis" }
+  ];
 
-    <VideoCarousel />
-  </section>
-);
+  return (
+    <div className="mt-32 grid md:grid-cols-3 gap-8">
+      {videos.map((video) => {
+        const isUnmuted = unmutedId === video.id;
+        return (
+          <div key={video.id} className="relative aspect-video bg-slate-900 rounded-2xl overflow-hidden border border-white/10 group shadow-2xl">
+            <video
+              src={video.src}
+              className="w-full h-full object-cover"
+              autoPlay
+              loop
+              muted={!isUnmuted}
+              playsInline
+            />
+            <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors pointer-events-none" />
+
+            {/* Small Title Tag */}
+            <div className="absolute top-4 left-4 pointer-events-none">
+              <div className="inline-block px-3 py-1 bg-black/50 backdrop-blur-md rounded-full text-xs font-mono text-white/90 border border-white/10">
+                {video.title}
+              </div>
+            </div>
+
+            <button
+              onClick={() => setUnmutedId(isUnmuted ? null : video.id)}
+              className={`absolute bottom-4 right-4 p-3 rounded-full backdrop-blur-md border transition-all duration-300 z-10 ${isUnmuted ? 'bg-orange text-white border-orange' : 'bg-black/50 text-white border-white/10 hover:bg-white hover:text-black'}`}
+            >
+              {isUnmuted ? <Volume2 size={16} /> : <VolumeX size={16} />}
+            </button>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+const Portfolio = () => {
+  const [unmutedId, setUnmutedId] = useState(null);
+
+  return (
+    <section id="work" className="py-20 container mx-auto px-6">
+      <div className="flex items-center justify-between mb-12">
+        <h2 className="text-4xl font-display font-bold text-white">SELECTED WORKS</h2>
+        <div className="flex items-center gap-2 text-xs font-mono text-green-400 bg-green-400/10 px-3 py-1 rounded-full border border-green-400/20">
+          <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
+          LIVE FEED
+        </div>
+      </div>
+
+      <VideoCarousel unmutedId={unmutedId} setUnmutedId={setUnmutedId} />
+      <LongFormShowcase unmutedId={unmutedId} setUnmutedId={setUnmutedId} />
+    </section>
+  );
+};
 
 const WhyUs = () => (
   <section id="why-us" className="py-32 container mx-auto px-6 relative">
