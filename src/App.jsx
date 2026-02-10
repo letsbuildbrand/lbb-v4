@@ -910,10 +910,14 @@ const Testimonials = () => {
 };
 
 const ProofOfConcepts = () => {
-  const allImages = Array.from({ length: 46 }, (_, i) => `/pow/${i + 1}.jpg`);
+  const allImages = Array.from({ length: 46 }, (_, i) => i + 1)
+    .filter(id => ![22, 37, 45].includes(id))
+    .map(id => `/pow/${id}.jpg`);
+
   // Split images for two logical rows
-  const row1 = allImages.slice(0, 23);
-  const row2 = allImages.slice(23, 46);
+  const midpoint = Math.ceil(allImages.length / 2);
+  const row1 = allImages.slice(0, midpoint);
+  const row2 = allImages.slice(midpoint);
 
   return (
     <section className="py-24 border-t border-white/5 bg-black/20 overflow-hidden">
@@ -1486,7 +1490,7 @@ const BookingModal = ({ isOpen, onClose }) => {
 
               <div className="flex-1 w-full h-full bg-white">
                 <iframe
-                  src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ22TRgjCde992OaMMdXilTx44Sey56rm_n0cwocUecwyfCKfPobFwzFsRkrZ14CFAAgZdmfVJKv?gv=true"
+                  src="https://www.cal.id/lbb-us"
                   style={{ border: 0 }}
                   width="100%"
                   height="100%"
@@ -1496,12 +1500,12 @@ const BookingModal = ({ isOpen, onClose }) => {
                 ></iframe>
               </div>
 
-              <div className="p-3 text-center bg-slate-50 border-t border-gray-200">
+              <div className="p-3 text-center bg-gray-900 border-t border-gray-800">
                 <a
-                  href="https://calendar.app.google/RLpuXEWaSmHyb2ML8"
+                  href="https://www.cal.id/lbb-us"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs text-gray-500 hover:text-orange underline transition-colors"
+                  className="text-xs text-gray-200 hover:text-orange underline transition-colors"
                 >
                   Click here if booking window doesn't open automatically
                 </a>
