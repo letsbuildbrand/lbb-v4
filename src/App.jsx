@@ -5,7 +5,7 @@ import {
   Youtube, TrendingUp, DollarSign, MousePointer2,
   CheckCircle2, Calendar, Clock, ChevronRight, ChevronLeft,
   Users, Zap, HelpCircle, ChevronDown, BadgeCheck,
-  Layers, BarChart3, Lock, Volume2, VolumeX, MapPin, Mail, Linkedin, Twitter
+  Layers, BarChart3, Lock, Volume2, VolumeX, MapPin, Mail, Linkedin, Twitter, Instagram
 } from 'lucide-react';
 import createGlobe from 'cobe';
 
@@ -537,7 +537,7 @@ const Portfolio = () => {
 
 const WhyUs = () => (
   <section id="why-us" className="py-32 container mx-auto px-6 relative">
-    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-orange/5 to-teal/5 rounded-full blur-[120px] -z-10" />
+    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[500px] md:max-w-[800px] aspect-square bg-gradient-to-r from-orange/5 to-teal/5 rounded-full blur-[80px] md:blur-[120px] -z-10" />
 
     <div className="text-center mb-24 max-w-3xl mx-auto">
       <h2 className="text-sm font-mono text-orange tracking-[0.2em] mb-4">THE GROWTH ENGINE</h2>
@@ -1229,13 +1229,27 @@ const Footer = ({ onNavigate }) => (
             We engineer attention for brands that define culture. A paramilitary creative unit dedicated to high-ticket retention and revenue.
           </p>
 
-          <div className="flex items-start gap-3 text-gray-400 mb-4">
-            <MapPin className="w-5 h-5 text-orange mt-1 shrink-0" />
-            <div className="text-sm leading-relaxed">
-              <span className="text-white font-bold block mb-1">HEADQUARTERS</span>
-              201, Wing-B, Cube Vastu,<br />
-              Kanchanwadi, Chhatrapati Sambhajinagar (Aurangabad),<br />
-              Maharashtra - 431011
+          <div className="flex flex-col gap-6 text-gray-400 mb-4">
+            {/* India Address */}
+            <div className="flex items-start gap-3">
+              <MapPin className="w-5 h-5 text-orange mt-1 shrink-0" />
+              <div className="text-sm leading-relaxed">
+                <span className="text-white font-bold block mb-1">INDIA HEADQUARTERS</span>
+                201, Wing-B, Cube Vastu,<br />
+                Kanchanwadi, Chhatrapati Sambhajinagar (Aurangabad),<br />
+                Maharashtra - 431011, India
+              </div>
+            </div>
+
+            {/* USA Address */}
+            <div className="flex items-start gap-3">
+              <MapPin className="w-5 h-5 text-teal mt-1 shrink-0" />
+              <div className="text-sm leading-relaxed">
+                <span className="text-white font-bold block mb-1">USA HEADQUARTERS <span className="text-xs font-normal text-teal border border-teal/20 bg-teal/10 px-2 py-0.5 rounded-full ml-2">OPENING SOON</span></span>
+                555 California Street, Suite 4900,<br />
+                San Francisco, CA 94104,<br />
+                United States
+              </div>
             </div>
           </div>
         </div>
@@ -1258,12 +1272,27 @@ const Footer = ({ onNavigate }) => (
           <h4 className="text-white font-bold font-display mb-6">CONNECT</h4>
           <ul className="space-y-4 text-sm text-gray-400">
             <li>
+              <a href="mailto:letsbuildbrand.us@gmail.com" className="flex items-center gap-2 hover:text-teal transition-colors">
+                <Mail className="w-4 h-4" />
+                letsbuildbrand.us@gmail.com (USA)
+              </a>
+            </li>
+            <li>
+              <a href="mailto:letsbuildbrand.in@gmail.com" className="flex items-center gap-2 hover:text-teal transition-colors">
+                <Mail className="w-4 h-4" />
+                letsbuildbrand.in@gmail.com (India)
+              </a>
+            </li>
+            <li>
               <a href="mailto:yadish@letsbuildbrand.com" className="flex items-center gap-2 hover:text-teal transition-colors">
                 <Mail className="w-4 h-4" />
                 yadish@letsbuildbrand.com
               </a>
             </li>
             <li className="flex gap-4 pt-2">
+              <a href="https://www.instagram.com/letsbuildbrand.us" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 hover:text-white transition-all text-gray-400 border border-white/5">
+                <Instagram className="w-4 h-4" />
+              </a>
               <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 hover:text-white transition-all text-gray-400 border border-white/5">
                 <Linkedin className="w-4 h-4" />
               </a>
