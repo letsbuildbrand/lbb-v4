@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Menu, X, ArrowRight, Play, Code, Smartphone,
@@ -164,26 +165,29 @@ const VideoCarousel = ({ unmutedId, setUnmutedId }) => {
   );
 };
 
-const Navbar = ({ onOpenModal, onNavigate }) => (
-  <nav className="fixed top-0 left-0 right-0 z-40 glass-nav px-6 py-4 flex justify-between items-center bg-slate-950/80 backdrop-blur-md border-b border-white/5">
-    <div className="flex items-center gap-12">
-      <button onClick={() => onNavigate('home')} className="text-2xl font-bold font-display tracking-tighter text-white">LBB.</button>
-      <div className="hidden md:flex gap-8 text-sm font-medium text-gray-400">
-        <button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('work')?.scrollIntoView(), 100); }} className="hover:text-white transition-colors">Work</button>
-        <button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('why-us')?.scrollIntoView(), 100); }} className="hover:text-white transition-colors">Why Us</button>
-        <button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('protocol')?.scrollIntoView(), 100); }} className="hover:text-white transition-colors">Protocol</button>
-        <button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('team')?.scrollIntoView(), 100); }} className="hover:text-white transition-colors">Team</button>
-        <button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('faq')?.scrollIntoView(), 100); }} className="hover:text-white transition-colors">FAQ</button>
+const Navbar = ({ onOpenModal, onNavigate }) => {
+  const navigate = useNavigate();
+  return (
+    <nav className="fixed top-0 left-0 right-0 z-40 glass-nav px-6 py-4 flex justify-between items-center bg-slate-950/80 backdrop-blur-md border-b border-white/5">
+      <div className="flex items-center gap-12">
+        <button onClick={() => onNavigate('home')} className="text-2xl font-bold font-display tracking-tighter text-white">LBB.</button>
+        <div className="hidden md:flex gap-8 text-sm font-medium text-gray-400">
+          <button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('work')?.scrollIntoView(), 100); }} className="hover:text-white transition-colors">Work</button>
+          <button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('why-us')?.scrollIntoView(), 100); }} className="hover:text-white transition-colors">Why Us</button>
+          <button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('protocol')?.scrollIntoView(), 100); }} className="hover:text-white transition-colors">Protocol</button>
+          <button onClick={() => navigate('/teams')} className="hover:text-white transition-colors">Team</button>
+          <button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('faq')?.scrollIntoView(), 100); }} className="hover:text-white transition-colors">FAQ</button>
+        </div>
       </div>
-    </div>
-    <button
-      onClick={onOpenModal}
-      className="bg-white text-black px-6 py-2 font-bold font-display tracking-wide hover:bg-orange hover:text-white transition-colors duration-300 text-sm uppercase"
-    >
-      Book Strategy
-    </button>
-  </nav>
-);
+      <button
+        onClick={onOpenModal}
+        className="bg-white text-black px-6 py-2 font-bold font-display tracking-wide hover:bg-orange hover:text-white transition-colors duration-300 text-sm uppercase"
+      >
+        Book Strategy
+      </button>
+    </nav>
+  );
+};
 
 const Hero = () => (
   <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">
@@ -643,7 +647,12 @@ const Founders = () => (
           </div>
 
           <h3 className="text-3xl font-display font-bold mb-2">AVI JAVERI</h3>
-          <p className="text-purple-400 font-mono text-sm tracking-widest mb-6">HEAD OF STRATEGY</p>
+          <p className="text-purple-400 font-mono text-sm tracking-widest mb-2">HEAD OF STRATEGY</p>
+
+          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 mb-6 bg-amber-500/10 border border-amber-500/20 rounded-full w-fit">
+            <MapPin className="w-2.5 h-2.5 text-amber-200/70" />
+            <span className="text-[10px] font-bold text-amber-100/80 tracking-widest uppercase">California, USA</span>
+          </div>
           <p className="text-gray-300 text-base leading-relaxed">
             "Growth is calculated, not accidental. I architect the master plan that aligns your content with revenue goals. We don't just consult; we engineer your market dominance."
           </p>
@@ -1221,103 +1230,106 @@ const GlobalOperations = () => {
 // Step 70 shows imports: ... Layers, BarChart3, Lock, Volume2, VolumeX.
 // I need to add MapPin, Mail, Linkedin, Twitter (or similar) to imports.
 
-const Footer = ({ onNavigate }) => (
-  <footer className="bg-slate-950 pt-20 pb-10 border-t border-white/10 relative overflow-hidden">
-    <div className="absolute inset-0 bg-noise opacity-5" />
-    <div className="container mx-auto px-6 relative z-10">
-      <div className="grid md:grid-cols-4 gap-12 mb-16">
-        {/* Brand & Address */}
-        <div className="md:col-span-2">
-          <div className="text-3xl font-bold font-display tracking-tighter text-white mb-6">LBB.</div>
-          <p className="text-gray-400 mb-8 max-w-sm leading-relaxed">
-            We engineer attention for brands that define culture. A paramilitary creative unit dedicated to high-ticket retention and revenue.
-          </p>
+const Footer = ({ onNavigate }) => {
+  const navigate = useNavigate();
+  return (
+    <footer className="bg-slate-950 pt-20 pb-10 border-t border-white/10 relative overflow-hidden">
+      <div className="absolute inset-0 bg-noise opacity-5" />
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="grid md:grid-cols-4 gap-12 mb-16">
+          {/* Brand & Address */}
+          <div className="md:col-span-2">
+            <div className="text-3xl font-bold font-display tracking-tighter text-white mb-6">LBB.</div>
+            <p className="text-gray-400 mb-8 max-w-sm leading-relaxed">
+              We engineer attention for brands that define culture. A paramilitary creative unit dedicated to high-ticket retention and revenue.
+            </p>
 
-          <div className="flex flex-col gap-6 text-gray-400 mb-4">
-            {/* India Address */}
-            <div className="flex items-start gap-3">
-              <MapPin className="w-5 h-5 text-orange mt-1 shrink-0" />
-              <div className="text-sm leading-relaxed">
-                <span className="text-white font-bold block mb-1">INDIA HEADQUARTERS</span>
-                201, Wing-B, Cube Vastu,<br />
-                Kanchanwadi, Chhatrapati Sambhajinagar (Aurangabad),<br />
-                Maharashtra - 431011, India
+            <div className="flex flex-col gap-6 text-gray-400 mb-4">
+              {/* India Address */}
+              <div className="flex items-start gap-3">
+                <MapPin className="w-5 h-5 text-orange mt-1 shrink-0" />
+                <div className="text-sm leading-relaxed">
+                  <span className="text-white font-bold block mb-1">INDIA HEADQUARTERS</span>
+                  201, Wing-B, Cube Vastu,<br />
+                  Kanchanwadi, Chhatrapati Sambhajinagar (Aurangabad),<br />
+                  Maharashtra - 431011, India
+                </div>
               </div>
-            </div>
 
-            {/* USA Address */}
-            <div className="flex items-start gap-3">
-              <MapPin className="w-5 h-5 text-teal mt-1 shrink-0" />
-              <div className="text-sm leading-relaxed">
-                <span className="text-white font-bold block mb-1">USA HEADQUARTERS <span className="text-xs font-normal text-teal border border-teal/20 bg-teal/10 px-2 py-0.5 rounded-full ml-2">OPENING SOON</span></span>
-                555 California Street, Suite 4900,<br />
-                San Francisco, CA 94104,<br />
-                United States
+              {/* USA Address */}
+              <div className="flex items-start gap-3">
+                <MapPin className="w-5 h-5 text-teal mt-1 shrink-0" />
+                <div className="text-sm leading-relaxed">
+                  <span className="text-white font-bold block mb-1">USA HEADQUARTERS <span className="text-xs font-normal text-teal border border-teal/20 bg-teal/10 px-2 py-0.5 rounded-full ml-2">OPENING SOON</span></span>
+                  555 California Street, Suite 4900,<br />
+                  San Francisco, CA 94104,<br />
+                  United States
+                </div>
               </div>
             </div>
           </div>
+
+          {/* Quick Links */}
+          <div>
+            <h4 className="text-white font-bold font-display mb-6">EXPLORE</h4>
+            <ul className="space-y-4 text-sm text-gray-400">
+              <li><button onClick={() => onNavigate('home')} className="hover:text-orange transition-colors">Home</button></li>
+              <li><button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('work')?.scrollIntoView(), 100); }} className="hover:text-orange transition-colors">Selected Work</button></li>
+              <li><button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('why-us')?.scrollIntoView(), 100); }} className="hover:text-orange transition-colors">Why Us</button></li>
+              <li><button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('protocol')?.scrollIntoView(), 100); }} className="hover:text-orange transition-colors">The Protocol</button></li>
+              <li><button onClick={() => navigate('/teams')} className="hover:text-orange transition-colors">The Unit</button></li>
+              <li><button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('faq')?.scrollIntoView(), 100); }} className="hover:text-orange transition-colors">FAQ</button></li>
+            </ul>
+          </div>
+
+          {/* Connect */}
+          <div>
+            <h4 className="text-white font-bold font-display mb-6">CONNECT</h4>
+            <ul className="space-y-4 text-sm text-gray-400">
+              <li>
+                <a href="mailto:letsbuildbrand.us@gmail.com" className="flex items-center gap-2 hover:text-teal transition-colors">
+                  <Mail className="w-4 h-4" />
+                  letsbuildbrand.us@gmail.com (USA)
+                </a>
+              </li>
+              <li>
+                <a href="mailto:letsbuildbrand.in@gmail.com" className="flex items-center gap-2 hover:text-teal transition-colors">
+                  <Mail className="w-4 h-4" />
+                  letsbuildbrand.in@gmail.com (India)
+                </a>
+              </li>
+              <li>
+                <a href="mailto:yadish@letsbuildbrand.com" className="flex items-center gap-2 hover:text-teal transition-colors">
+                  <Mail className="w-4 h-4" />
+                  yadish@letsbuildbrand.com
+                </a>
+              </li>
+              <li className="flex gap-4 pt-2">
+                <a href="https://www.instagram.com/letsbuildbrand.us" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 hover:text-white transition-all text-gray-400 border border-white/5">
+                  <Instagram className="w-4 h-4" />
+                </a>
+                <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 hover:text-white transition-all text-gray-400 border border-white/5">
+                  <Linkedin className="w-4 h-4" />
+                </a>
+                <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 hover:text-white transition-all text-gray-400 border border-white/5">
+                  <Twitter className="w-4 h-4" />
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
 
-        {/* Quick Links */}
-        <div>
-          <h4 className="text-white font-bold font-display mb-6">EXPLORE</h4>
-          <ul className="space-y-4 text-sm text-gray-400">
-            <li><button onClick={() => onNavigate('home')} className="hover:text-orange transition-colors">Home</button></li>
-            <li><button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('work')?.scrollIntoView(), 100); }} className="hover:text-orange transition-colors">Selected Work</button></li>
-            <li><button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('why-us')?.scrollIntoView(), 100); }} className="hover:text-orange transition-colors">Why Us</button></li>
-            <li><button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('protocol')?.scrollIntoView(), 100); }} className="hover:text-orange transition-colors">The Protocol</button></li>
-            <li><button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('team')?.scrollIntoView(), 100); }} className="hover:text-orange transition-colors">The Unit</button></li>
-            <li><button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('faq')?.scrollIntoView(), 100); }} className="hover:text-orange transition-colors">FAQ</button></li>
-          </ul>
-        </div>
-
-        {/* Connect */}
-        <div>
-          <h4 className="text-white font-bold font-display mb-6">CONNECT</h4>
-          <ul className="space-y-4 text-sm text-gray-400">
-            <li>
-              <a href="mailto:letsbuildbrand.us@gmail.com" className="flex items-center gap-2 hover:text-teal transition-colors">
-                <Mail className="w-4 h-4" />
-                letsbuildbrand.us@gmail.com (USA)
-              </a>
-            </li>
-            <li>
-              <a href="mailto:letsbuildbrand.in@gmail.com" className="flex items-center gap-2 hover:text-teal transition-colors">
-                <Mail className="w-4 h-4" />
-                letsbuildbrand.in@gmail.com (India)
-              </a>
-            </li>
-            <li>
-              <a href="mailto:yadish@letsbuildbrand.com" className="flex items-center gap-2 hover:text-teal transition-colors">
-                <Mail className="w-4 h-4" />
-                yadish@letsbuildbrand.com
-              </a>
-            </li>
-            <li className="flex gap-4 pt-2">
-              <a href="https://www.instagram.com/letsbuildbrand.us" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 hover:text-white transition-all text-gray-400 border border-white/5">
-                <Instagram className="w-4 h-4" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 hover:text-white transition-all text-gray-400 border border-white/5">
-                <Linkedin className="w-4 h-4" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 hover:text-white transition-all text-gray-400 border border-white/5">
-                <Twitter className="w-4 h-4" />
-              </a>
-            </li>
-          </ul>
+        <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-600 font-mono">
+          <div>&copy; {new Date().getFullYear()} Let's Build Brand. All rights reserved.</div>
+          <div className="flex gap-8">
+            <button onClick={() => onNavigate('privacy')} className="hover:text-gray-400 transition-colors uppercase">PRIVACY POLICY</button>
+            <button onClick={() => onNavigate('terms')} className="hover:text-gray-400 transition-colors uppercase">TERMS OF SERVICE</button>
+          </div>
         </div>
       </div>
-
-      <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-600 font-mono">
-        <div>&copy; {new Date().getFullYear()} Let's Build Brand. All rights reserved.</div>
-        <div className="flex gap-8">
-          <button onClick={() => onNavigate('privacy')} className="hover:text-gray-400 transition-colors uppercase">PRIVACY POLICY</button>
-          <button onClick={() => onNavigate('terms')} className="hover:text-gray-400 transition-colors uppercase">TERMS OF SERVICE</button>
-        </div>
-      </div>
-    </div>
-  </footer>
-);
+    </footer>
+  );
+};
 
 const TermsOfService = () => (
   <section className="pt-32 pb-20 container mx-auto px-6 min-h-screen text-gray-300">
