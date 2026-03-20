@@ -1,10 +1,17 @@
-import { StrictMode } from 'react'
+import { StrictMode, useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
 import TestimonialsPage from './components/TestimonialsPage.jsx'
 import TeamPage from './components/TeamPage.jsx'
+
+const BriefGeneratorRedirect = () => {
+  useEffect(() => {
+    window.location.href = '/brief-generator.html';
+  }, []);
+  return null;
+};
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -13,6 +20,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/" element={<App />} />
         <Route path="/testimonials" element={<TestimonialsPage />} />
         <Route path="/teams" element={<TeamPage />} />
+        <Route path="/brief-generator" element={<BriefGeneratorRedirect />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,

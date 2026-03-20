@@ -1,0 +1,2459 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Client Brief</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root {
+            --cream: #FBF7F0;
+            --warm-white: #FFFDF9;
+            --sand: #F2EAD8;
+            --amber: #C47B2B;
+            --amber-light: #E8A84C;
+            --amber-pale: #FDF3E3;
+            --charcoal: #2A2015;
+            --bark: #6B5236;
+            --dust: #A08C72;
+            --line: #E2D4BE;
+            --line-light: #EDE4D3;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--cream);
+            color: var(--charcoal);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        .playfair {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .italic-accent {
+            font-style: italic;
+            color: var(--amber);
+        }
+
+        /* General Layout */
+
+        /* Main Content */
+        .main-content {
+            margin-left: 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .top-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--amber-light), var(--amber));
+            width: 0%;
+            transition: width 0.3s;
+            z-index: 101;
+        }
+
+        /* Hero */
+        .hero {
+            background: var(--charcoal);
+            color: white;
+            padding: 80px 80px 48px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(196, 123, 43, 0.15) 0%, rgba(42, 32, 21, 0) 70%);
+            pointer-events: none;
+        }
+
+        .eyebrow {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--amber);
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            line-height: 1.1;
+            margin-bottom: 16px;
+        }
+
+        .hero p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 18px;
+            max-width: 600px;
+            margin-bottom: 48px;
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .hero-input {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .hero-input label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.5);
+            letter-spacing: 1px;
+        }
+
+        .glass-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: white;
+            font-family: inherit;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .glass-input:focus {
+            outline: none;
+            border-color: var(--amber);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Form Body */
+        /* Form Body */
+        .form-body {
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Cards */
+        .section-card {
+            background: var(--warm-white);
+            border-radius: 16px;
+            border: 1px solid var(--line-light);
+            box-shadow: 0 8px 32px rgba(42, 32, 21, 0.08);
+            width: 100%;
+        }
+
+        @keyframes slideUpFade {
+            0% {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDownFade {
+            0% {
+                opacity: 0;
+                transform: translateY(-40px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Jotform Flow Styles */
+        .hero,
+        .section-card,
+        .submit-section {
+            display: none;
+            width: 100%;
+        }
+
+        .hero.active,
+        .section-card.active,
+        .submit-section.active {
+            display: block;
+        }
+
+        /* Animations */
+        .hero.active,
+        .submit-section.active {
+            animation: slideUpFade 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .hero.active.reverse,
+        .submit-section.active.reverse {
+            animation: slideDownFade 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .step-wrapper {
+            display: none;
+            opacity: 0;
+        }
+
+        .step-wrapper.step-active {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            animation: slideUpFade 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .step-wrapper.step-active.reverse {
+            animation: slideDownFade 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .bottom-nav {
+            display: flex;
+            justify-content: space-between;
+            padding: 24px 80px;
+            background: var(--cream);
+            border-top: 1px solid var(--line-light);
+            margin-top: auto;
+            z-index: 10;
+        }
+
+        .btn-nav {
+            background: var(--charcoal);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 100px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(42, 32, 21, 0.1);
+            transition: all 0.2s;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-nav:hover {
+            background: var(--amber);
+            box-shadow: 0 8px 24px rgba(196, 123, 43, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-nav:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--sand), var(--warm-white));
+            padding: 16px 24px;
+            border-radius: 16px 16px 0 0;
+            border-bottom: 1px solid transparent;
+            border-image: linear-gradient(to right, var(--amber), transparent) 1;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-num {
+            width: 44px;
+            height: 44px;
+            background: var(--charcoal);
+            color: var(--amber);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .header-text h3 {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .header-text p {
+            font-size: 12px;
+            color: var(--dust);
+        }
+
+        .card-body {
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Inputs */
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .field-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--bark);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 24px;
+        }
+
+        .std-input {
+            background: var(--cream);
+            border: 1.5px solid var(--line);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-family: inherit;
+            font-size: 14px;
+            color: var(--charcoal);
+            width: 100%;
+            transition: all 0.2s;
+        }
+
+        .std-input::placeholder {
+            font-style: italic;
+            color: #C0B4A2;
+        }
+
+        .std-input:focus {
+            outline: none;
+            border-color: var(--amber);
+            background: var(--amber-pale);
+            box-shadow: 0 0 0 3px rgba(196, 123, 43, 0.2);
+        }
+
+        textarea.std-input {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* URL Row */
+        .url-row {
+            display: flex;
+        }
+
+        .url-badge {
+            background: var(--charcoal);
+            color: var(--amber);
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 8px 0 0 8px;
+            white-space: nowrap;
+        }
+
+        .url-row .std-input {
+            border-radius: 0 8px 8px 0;
+            border-left: none;
+        }
+
+        /* Pills (Checkbox & Radio) */
+        .pill-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .pill-label {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 16px;
+            background: var(--cream);
+            border: 1.5px solid var(--line);
+            border-radius: 100px;
+            font-size: 14px;
+            color: var(--bark);
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .pill-label:hover {
+            background: var(--amber-pale);
+            border-color: var(--amber);
+            color: var(--amber);
+        }
+
+        .pill-label input {
+            display: none;
+        }
+
+        /* Checkbox specific */
+        .check-icon {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 1.5px solid var(--bark);
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .check-icon::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .pill-label:has(input[type="checkbox"]:checked) {
+            background: var(--amber-pale);
+            border-color: var(--amber);
+            color: var(--amber);
+        }
+
+        .pill-label:has(input[type="checkbox"]:checked) .check-icon {
+            background: var(--amber);
+            border-color: var(--amber);
+        }
+
+        .pill-label:has(input[type="checkbox"]:checked) .check-icon::after {
+            opacity: 1;
+        }
+
+        .pill-label:hover .check-icon {
+            border-color: var(--amber);
+        }
+
+        /* Radio specific */
+        .pill-label:has(input[type="radio"]:checked) {
+            background: var(--charcoal);
+            border-color: var(--charcoal);
+            color: white;
+        }
+
+        /* Audio Sliders */
+        .slider-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .db-readout {
+            background: var(--amber);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .custom-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 4px;
+            background: var(--line);
+            border-radius: 2px;
+            outline: none;
+        }
+
+        .custom-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--amber);
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(196, 123, 43, 0.4);
+            cursor: pointer;
+        }
+
+        /* Colour Pickers */
+        .color-picker-row {
+            display: flex;
+            gap: 16px;
+        }
+
+        .color-picker-card {
+            background: var(--cream);
+            border: 1.5px solid var(--line);
+            border-radius: 8px;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .color-input-native {
+            -webkit-appearance: none;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .color-input-native::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        .color-input-native::-webkit-color-swatch {
+            border: none;
+            border-radius: 50%;
+        }
+
+        .hex-input {
+            border: none;
+            background: transparent;
+            width: 100%;
+            font-family: inherit;
+            font-size: 14px;
+            text-transform: uppercase;
+            color: var(--charcoal);
+            outline: none;
+        }
+
+        /* Tip / Callout */
+        .tip-box {
+            background: var(--amber-pale);
+            border-left: 3px solid var(--amber);
+            padding: 16px;
+            font-style: italic;
+            color: var(--bark);
+            font-size: 14px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .tip-box span {
+            color: var(--amber);
+            font-weight: bold;
+            margin-right: 8px;
+            font-style: normal;
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: var(--line-light);
+            margin: 28px 0;
+        }
+
+        /* Submit Section */
+        .submit-section {
+            background: var(--charcoal);
+            border-radius: 16px;
+            padding: 48px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin: 40px auto;
+            max-width: 800px;
+            width: calc(100% - 80px);
+            /* Account for general spacing on larger screens */
+            box-shadow: 0 8px 32px rgba(42, 32, 21, 0.2);
+        }
+
+        .submit-section::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(196, 123, 43, 0.2) 0%, rgba(42, 32, 21, 0) 70%);
+            pointer-events: none;
+        }
+
+        .submit-section h2 {
+            color: white;
+            font-size: 32px;
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .submit-section p {
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 32px;
+            position: relative;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--amber-light), var(--amber));
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 100px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(196, 123, 43, 0.3);
+            transition: all 0.2s;
+            margin-right: 16px;
+            position: relative;
+            font-family: inherit;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(196, 123, 43, 0.5);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 16px 32px;
+            border-radius: 100px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            font-family: inherit;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: -100px;
+            right: 24px;
+            background: var(--charcoal);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .toast.show {
+            bottom: 24px;
+        }
+
+        /* Reset FAB & Modal */
+        .reset-fab {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background: var(--charcoal);
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(42, 32, 21, 0.2);
+            border: none;
+            z-index: 1000;
+            transition: all 0.2s;
+        }
+
+        .reset-fab:hover {
+            background: var(--amber);
+            transform: translateY(-2px);
+        }
+
+        .reset-fab svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+        }
+
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(42, 32, 21, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .modal-backdrop.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-dialog {
+            background: var(--warm-white);
+            padding: 32px;
+            border-radius: 16px;
+            max-width: 400px;
+            width: calc(100% - 48px);
+            text-align: center;
+            box-shadow: 0 16px 48px rgba(42, 32, 21, 0.2);
+            transform: translateY(20px);
+            transition: transform 0.3s;
+        }
+
+        .modal-backdrop.show .modal-dialog {
+            transform: translateY(0);
+        }
+
+        .modal-dialog h3 {
+            color: var(--charcoal);
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .modal-dialog p {
+            color: var(--bark);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .btn-red {
+            background: #E53935;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 100px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-red:hover {
+            background: #D32F2F;
+        }
+
+        .btn-cancel {
+            background: var(--line-light);
+            color: var(--charcoal);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 100px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-cancel:hover {
+            background: var(--line);
+        }
+
+        /* Responsive */
+
+        @media (max-width: 720px) {
+            .main-content {
+                margin-left: 0;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .top-progress {
+                left: 0;
+            }
+
+            .grid-2,
+            .grid-3 {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .meta-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-body {
+                padding: 20px 16px;
+                flex: 1;
+                display: flex;
+                align-items: center;
+            }
+
+            .hero {
+                padding: 40px 20px 32px;
+                border-radius: 16px;
+                margin-top: 24px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .card-body {
+                padding: 24px 16px;
+            }
+
+            .color-picker-row {
+                flex-wrap: wrap;
+            }
+
+            .btn-primary {
+                margin-right: 0;
+                margin-bottom: 16px;
+                display: block;
+                width: 100%;
+            }
+
+            .submit-section {
+                padding: 32px 20px;
+                width: calc(100% - 32px);
+                margin: 24px auto;
+            }
+
+            .bottom-nav {
+                padding: 16px;
+                flex-direction: column-reverse;
+                gap: 12px;
+            }
+
+            .btn-nav {
+                width: 100%;
+                justify-content: center;
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Main area -->
+    <div class="main-content">
+        <div class="top-progress" id="topProgress"></div>
+
+        <!-- Hero -->
+        <header class="hero">
+            <span class="eyebrow">Interactive Brief</span>
+            <h1>Project <span class="playfair italic-accent">Kickoff</span></h1>
+            <p>Complete this brief to give your editor everything needed for a perfect first cut.</p>
+
+            <div class="meta-grid">
+                <div class="hero-input">
+                    <label>Client Name</label>
+                    <input type="text" class="glass-input track-input" name="meta_client_name"
+                        placeholder="E.g. Acme Corp">
+                </div>
+                <div class="hero-input">
+                    <label>Project Name</label>
+                    <input type="text" class="glass-input track-input" name="meta_project_name"
+                        placeholder="Campaign 2024">
+                </div>
+                <div class="hero-input">
+                    <label>Date</label>
+                    <input type="date" class="glass-input track-input" name="meta_date" id="metaDate">
+                </div>
+                <div class="hero-input">
+                    <label>Deadline</label>
+                    <input type="date" class="glass-input track-input" name="meta_deadline">
+                </div>
+            </div>
+        </header>
+
+        <div class="form-body">
+
+            <!-- SEC 00 (Brief Type) -->
+            <section id="sec-00" class="section-card">
+                <div class="card-header">
+                    <div class="header-num">✦</div>
+                    <div class="header-text">
+                        <h3>Brief Type</h3>
+                        <p>How much detail do you want to provide?</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="field-group is-short">
+                        <label class="field-label">Select Brief Length</label>
+                        <div class="pill-container" style="flex-direction: column;">
+                            <label class="pill-label" style="text-align: left; padding: 24px;">
+                                <input type="radio" name="brief_type" value="short" class="track-input"
+                                    onchange="window.briefType='short'">
+                                <div style="font-weight: bold; font-size: 18px;">⚡ Short Brief (2 minutes)</div>
+                                <div
+                                    style="font-size: 14px; opacity: 0.8; font-weight: normal; margin-top: 4px; pointer-events: none;">
+                                    Only the absolute 6 essential questions. Perfect for quick or standard projects.
+                                </div>
+                            </label>
+                            <label class="pill-label" style="text-align: left; padding: 24px;">
+                                <input type="radio" name="brief_type" value="detailed" class="track-input"
+                                    onchange="window.briefType='detailed'" checked>
+                                <div style="font-weight: bold; font-size: 18px;">🧠 Detailed Brief (8 minutes)</div>
+                                <div
+                                    style="font-size: 14px; opacity: 0.8; font-weight: normal; margin-top: 4px; pointer-events: none;">
+                                    Comprehensive form including editing style, text overlays, color grading, and audio
+                                    levels.</div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEC 01 -->
+            <section id="sec-01" class="section-card">
+                <div class="card-header">
+                    <div class="header-num">01</div>
+                    <div class="header-text">
+                        <h3>🎯 Project Overview</h3>
+                        <p>Tell us the big picture</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="field-group is-short">
+                        <label class="field-label">What is the goal of this video?</label>
+                        <textarea class="std-input track-input" name="goal"
+                            placeholder="e.g. Lead generation, brand awareness, education, sales"></textarea>
+                    </div>
+                    <div class="grid-2">
+                        <div class="field-group">
+                            <label class="field-label">Target Audience</label>
+                            <input type="text" class="std-input track-input" name="audience"
+                                placeholder="Who is watching?">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Platform / Where they'll watch</label>
+                            <input type="text" class="std-input track-input" name="platform"
+                                placeholder="e.g. YouTube, Instagram Reels">
+                        </div>
+                    </div>
+                    <div class="field-group is-short">
+                        <label class="field-label">Core Message</label>
+                        <textarea class="std-input track-input" name="message"
+                            placeholder="The ONE thing viewers must feel or know after watching"></textarea>
+                    </div>
+                    <div class="tip-box">
+                        <span>✦</span> Be ruthless with this answer — a video with one clear message outperforms one
+                        trying to say everything.
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEC 02 -->
+            <section id="sec-02" class="section-card">
+                <div class="card-header">
+                    <div class="header-num">02</div>
+                    <div class="header-text">
+                        <h3>🎬 Creative References</h3>
+                        <p>Show your editor exactly what good looks like to you</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="field-group is-short">
+                        <div class="url-row">
+                            <div class="url-badge">LINK 1</div>
+                            <input type="url" class="std-input track-input" name="ref1_url" placeholder="https://...">
+                        </div>
+                        <input type="text" class="std-input track-input" name="ref1_likes"
+                            placeholder="What specifically do you like about this?">
+                    </div>
+                    <div class="divider"></div>
+                    <div class="field-group">
+                        <div class="url-row">
+                            <div class="url-badge">LINK 2</div>
+                            <input type="url" class="std-input track-input" name="ref2_url" placeholder="https://...">
+                        </div>
+                        <input type="text" class="std-input track-input" name="ref2_likes"
+                            placeholder="What specifically do you like about this?">
+                    </div>
+                    <div class="divider"></div>
+                    <div class="field-group">
+                        <div class="url-row">
+                            <div class="url-badge">LINK 3</div>
+                            <input type="url" class="std-input track-input" name="ref3_url" placeholder="https://...">
+                        </div>
+                        <input type="text" class="std-input track-input" name="ref3_likes"
+                            placeholder="What specifically do you like about this?">
+                    </div>
+                    <div class="tip-box">
+                        <span>✦</span> Be precise — 'I like the fast jump cuts in Link 1 but the lower-third text style
+                        of Link 2' is gold for an editor.
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEC 03 -->
+            <section id="sec-03" class="section-card">
+                <div class="card-header">
+                    <div class="header-num">03</div>
+                    <div class="header-text">
+                        <h3>✂️ Editing Style & Pacing</h3>
+                        <p>Set the rhythm, energy, and feel of the edit</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="field-group is-short">
+                        <label class="field-label">General Vibe</label>
+                        <div class="pill-container">
+                            <label class="pill-label"><input type="checkbox" name="style[]" value="Cinematic & Polished"
+                                    class="track-input">
+                                <div class="check-icon"></div>Cinematic & Polished
+                            </label>
+                            <label class="pill-label"><input type="checkbox" name="style[]" value="High Energy / Hype"
+                                    class="track-input">
+                                <div class="check-icon"></div>High Energy / Hype
+                            </label>
+                            <label class="pill-label"><input type="checkbox" name="style[]"
+                                    value="Warm & Conversational" class="track-input">
+                                <div class="check-icon"></div>Warm & Conversational
+                            </label>
+                            <label class="pill-label"><input type="checkbox" name="style[]" value="Minimalist & Clean"
+                                    class="track-input">
+                                <div class="check-icon"></div>Minimalist & Clean
+                            </label>
+                            <label class="pill-label"><input type="checkbox" name="style[]"
+                                    value="Corporate / Professional" class="track-input">
+                                <div class="check-icon"></div>Corporate / Professional
+                            </label>
+                            <label class="pill-label"><input type="checkbox" name="style[]"
+                                    value="Storytelling / Documentary" class="track-input">
+                                <div class="check-icon"></div>Storytelling / Documentary
+                            </label>
+                            <label class="pill-label"><input type="checkbox" name="style[]" value="Playful / Fun"
+                                    class="track-input">
+                                <div class="check-icon"></div>Playful / Fun
+                            </label>
+                        </div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="field-group">
+                            <label class="field-label">Pacing / Cut Style</label>
+                            <input type="text" class="std-input track-input" name="pacing"
+                                placeholder="e.g. Fast, jump cuts, deliberate">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Speed Adjustment</label>
+                            <input type="text" class="std-input track-input" name="speed"
+                                placeholder="e.g. Speed ramps, slow mo">
+                        </div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="field-group">
+                            <label class="field-label">Transitions</label>
+                            <input type="text" class="std-input track-input" name="transitions"
+                                placeholder="e.g. Hard cuts, cross dissolves">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Filler Words to Remove</label>
+                            <input type="text" class="std-input track-input" name="fillers"
+                                placeholder="e.g. Ums, ahs, long pauses">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEC 04 -->
+            <section id="sec-04" class="section-card">
+                <div class="card-header">
+                    <div class="header-num">04</div>
+                    <div class="header-text">
+                        <h3>📁 Assets & Resources</h3>
+                        <p>Where to find everything your editor needs</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="url-row is-short">
+                        <div class="url-badge">FOOTAGE</div>
+                        <input type="url" class="std-input track-input" name="url_footage"
+                            placeholder="Drive/Dropbox link">
+                    </div>
+                    <div class="pill-container">
+                        <label class="pill-label"><input type="checkbox" name="stock_pref[]"
+                                value="Editor to source stock" class="track-input">
+                            <div class="check-icon"></div>Editor to source stock footage
+                        </label>
+                        <label class="pill-label"><input type="checkbox" name="stock_pref[]" value="Provided in folder"
+                                class="track-input">
+                            <div class="check-icon"></div>Provided in folder
+                        </label>
+                    </div>
+                    <div class="url-row is-short">
+                        <div class="url-badge">ASSETS</div>
+                        <input type="url" class="std-input track-input" name="url_assets"
+                            placeholder="Logo/Branding folder">
+                    </div>
+                    <div class="url-row">
+                        <div class="url-badge">B-ROLL</div>
+                        <input type="url" class="std-input track-input" name="url_broll"
+                            placeholder="Drive/Dropbox link">
+                    </div>
+                    <div class="url-row">
+                        <div class="url-badge">SCRIPT</div>
+                        <input type="url" class="std-input track-input" name="url_script"
+                            placeholder="Docs/Notion link">
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEC 05 -->
+            <section id="sec-05" class="section-card">
+                <div class="card-header">
+                    <div class="header-num">05</div>
+                    <div class="header-text">
+                        <h3>✍️ Text & Graphics</h3>
+                        <p>On-screen visuals, captions, and branding elements</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="grid-2">
+                        <div class="field-group">
+                            <label class="field-label">Primary Font</label>
+                            <input type="text" class="std-input track-input" name="font_primary"
+                                placeholder="Name or link">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Secondary Font</label>
+                            <input type="text" class="std-input track-input" name="font_secondary"
+                                placeholder="Name or link">
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">Caption Style</label>
+                        <div class="pill-container">
+                            <label class="pill-label"><input type="radio" name="caption_style" value="Pop-up / Animated"
+                                    class="track-input">Pop-up / Animated</label>
+                            <label class="pill-label"><input type="radio" name="caption_style"
+                                    value="Karaoke / Highlight" class="track-input">Karaoke / Word Highlight</label>
+                            <label class="pill-label"><input type="radio" name="caption_style"
+                                    value="Static Bottom Third" class="track-input">Static Bottom Third</label>
+                            <label class="pill-label"><input type="radio" name="caption_style" value="No Captions"
+                                    class="track-input">No Captions</label>
+                        </div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="field-group">
+                            <label class="field-label">Caption Colour</label>
+                            <input type="text" class="std-input track-input" name="caption_color"
+                                placeholder="e.g. White with yellow accent">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Caption Size / Weight</label>
+                            <input type="text" class="std-input track-input" name="caption_size"
+                                placeholder="e.g. Bold, large">
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">Overlays</label>
+                        <div class="pill-container">
+                            <label class="pill-label"><input type="checkbox" name="overlays[]" value="Arrows & Callouts"
+                                    class="track-input">
+                                <div class="check-icon"></div>Arrows & Callouts
+                            </label>
+                            <label class="pill-label"><input type="checkbox" name="overlays[]" value="Progress Bar"
+                                    class="track-input">
+                                <div class="check-icon"></div>Progress Bar
+                            </label>
+                            <label class="pill-label"><input type="checkbox" name="overlays[]" value="Lower Thirds"
+                                    class="track-input">
+                                <div class="check-icon"></div>Lower Thirds
+                            </label>
+                            <label class="pill-label"><input type="checkbox" name="overlays[]" value="None"
+                                    class="track-input">
+                                <div class="check-icon"></div>None
+                            </label>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">Branding Elements</label>
+                        <div class="pill-container">
+                            <label class="pill-label"><input type="checkbox" name="branding[]" value="Logo Intro"
+                                    class="track-input">
+                                <div class="check-icon"></div>Logo Intro
+                            </label>
+                            <label class="pill-label"><input type="checkbox" name="branding[]" value="Branded Outro"
+                                    class="track-input">
+                                <div class="check-icon"></div>Branded Outro
+                            </label>
+                            <label class="pill-label"><input type="checkbox" name="branding[]" value="CTA Slide"
+                                    class="track-input">
+                                <div class="check-icon"></div>CTA Slide
+                            </label>
+                            <label class="pill-label"><input type="checkbox" name="branding[]"
+                                    value="Subscribe Animation" class="track-input">
+                                <div class="check-icon"></div>Subscribe Animation
+                            </label>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">Branding Instructions</label>
+                        <textarea class="std-input track-input" name="branding_notes"
+                            placeholder="Any specific rules for logo placement, safe zones, etc."></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEC 06 -->
+            <section id="sec-06" class="section-card">
+                <div class="card-header">
+                    <div class="header-num">06</div>
+                    <div class="header-text">
+                        <h3>🎨 Colour & Cinematic Look</h3>
+                        <p>The visual mood and grade of the final video</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="field-group">
+                        <label class="field-label">Overall Grade</label>
+                        <div class="pill-container">
+                            <label class="pill-label"><input type="radio" name="grade" value="Warm / Golden"
+                                    class="track-input">Warm / Golden</label>
+                            <label class="pill-label"><input type="radio" name="grade" value="Cool / Desaturated"
+                                    class="track-input">Cool / Desaturated</label>
+                            <label class="pill-label"><input type="radio" name="grade" value="High Contrast"
+                                    class="track-input">High Contrast</label>
+                            <label class="pill-label"><input type="radio" name="grade" value="Natural / Neutral"
+                                    class="track-input">Natural / Neutral</label>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">Grade Reference</label>
+                        <input type="text" class="std-input track-input" name="grade_ref"
+                            placeholder="Link, screenshot, or describe — e.g. 'Sony commercial look'">
+                    </div>
+                    <div class="grid-2">
+                        <div class="field-group">
+                            <label class="field-label">Skin Tone</label>
+                            <div class="pill-container">
+                                <label class="pill-label"><input type="radio" name="skin" value="Fully Natural"
+                                        class="track-input">Fully Natural</label>
+                                <label class="pill-label"><input type="radio" name="skin" value="Add Warmth"
+                                        class="track-input">Add Warmth</label>
+                                <label class="pill-label"><input type="radio" name="skin" value="Match Reference"
+                                        class="track-input">Match Reference</label>
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Sharpening</label>
+                            <div class="pill-container">
+                                <label class="pill-label"><input type="radio" name="sharpen" value="None"
+                                        class="track-input">None</label>
+                                <label class="pill-label"><input type="radio" name="sharpen" value="Light"
+                                        class="track-input">Light</label>
+                                <label class="pill-label"><input type="radio" name="sharpen" value="Medium"
+                                        class="track-input">Medium</label>
+                                <label class="pill-label"><input type="radio" name="sharpen" value="Heavy"
+                                        class="track-input">Heavy</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">Additional Look Notes</label>
+                        <textarea class="std-input track-input" name="look_notes"
+                            placeholder="Glow effects, film grain, halation requests, etc."></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEC 07 -->
+            <section id="sec-07" class="section-card">
+                <div class="card-header">
+                    <div class="header-num">07</div>
+                    <div class="header-text">
+                        <h3>🎵 Audio & Music</h3>
+                        <p>How the video sounds — music, SFX, and levels</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="grid-2">
+                        <div class="field-group">
+                            <label class="field-label">Music Genre / Mood</label>
+                            <input type="text" class="std-input track-input" name="music_mood"
+                                placeholder="e.g. Lo-fi chill, upbeat pop, tense cinematic">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Specific Track or Playlist</label>
+                            <input type="url" class="std-input track-input" name="music_url"
+                                placeholder="Spotify/Epidemic link">
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">Sound Effects (SFX)</label>
+                        <div class="pill-container">
+                            <label class="pill-label"><input type="checkbox" name="sfx[]" value="Transition Whooshes"
+                                    class="track-input">
+                                <div class="check-icon"></div>Transition Whooshes
+                            </label>
+                            <label class="pill-label"><input type="checkbox" name="sfx[]" value="Text Pop Sounds"
+                                    class="track-input">
+                                <div class="check-icon"></div>Text Pop Sounds
+                            </label>
+                            <label class="pill-label"><input type="checkbox" name="sfx[]" value="Ambient Room Tone"
+                                    class="track-input">
+                                <div class="check-icon"></div>Ambient Room Tone
+                            </label>
+                            <label class="pill-label"><input type="checkbox" name="sfx[]" value="No SFX"
+                                    class="track-input">
+                                <div class="check-icon"></div>No SFX
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="grid-3">
+                        <div class="slider-group">
+                            <div class="slider-header">
+                                <label class="field-label">Background Music</label>
+                                <span class="db-readout" id="bgm_out">-18 dB</span>
+                            </div>
+                            <input type="range" class="custom-slider track-input" name="lvl_bgm" min="-40" max="0"
+                                value="-18" oninput="document.getElementById('bgm_out').innerText = this.value + ' dB'">
+                        </div>
+                        <div class="slider-group">
+                            <div class="slider-header">
+                                <label class="field-label">Vocals / Voiceover</label>
+                                <span class="db-readout" id="vox_out">-3 dB</span>
+                            </div>
+                            <input type="range" class="custom-slider track-input" name="lvl_vox" min="-40" max="0"
+                                value="-3" oninput="document.getElementById('vox_out').innerText = this.value + ' dB'">
+                        </div>
+                        <div class="slider-group">
+                            <div class="slider-header">
+                                <label class="field-label">SFX Level</label>
+                                <span class="db-readout" id="sfx_out">-12 dB</span>
+                            </div>
+                            <input type="range" class="custom-slider track-input" name="lvl_sfx" min="-40" max="0"
+                                value="-12" oninput="document.getElementById('sfx_out').innerText = this.value + ' dB'">
+                        </div>
+                    </div>
+
+                    <div class="tip-box">
+                        <span>✦</span> Standard starting point: Background at −18 dB · Vocals at −3 dB · SFX at −12 dB.
+                        Adjust sliders to your preference.
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEC 08 -->
+            <section id="sec-08" class="section-card">
+                <div class="card-header">
+                    <div class="header-num">08</div>
+                    <div class="header-text">
+                        <h3>⚙️ Technical Specifications</h3>
+                        <p>Exact delivery requirements for the final export</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="field-group is-short">
+                        <label class="field-label">Aspect Ratio</label>
+                        <div class="pill-container">
+                            <label class="pill-label"><input type="radio" name="ratio" value="9:16"
+                                    class="track-input">9:16 Reels/TikTok/Shorts</label>
+                            <label class="pill-label"><input type="radio" name="ratio" value="16:9"
+                                    class="track-input">16:9 YouTube/Landscape</label>
+                            <label class="pill-label"><input type="radio" name="ratio" value="1:1"
+                                    class="track-input">1:1 Feed Square</label>
+                            <label class="pill-label"><input type="radio" name="ratio" value="4:5"
+                                    class="track-input">4:5 Portrait Feed</label>
+                        </div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="field-group">
+                            <label class="field-label">Resolution</label>
+                            <div class="pill-container">
+                                <label class="pill-label"><input type="radio" name="resolution" value="1080p"
+                                        class="track-input">1080p</label>
+                                <label class="pill-label"><input type="radio" name="resolution" value="4K"
+                                        class="track-input">4K</label>
+                                <label class="pill-label"><input type="radio" name="resolution" value="Match Source"
+                                        class="track-input">Match Source</label>
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Frame Rate</label>
+                            <div class="pill-container">
+                                <label class="pill-label"><input type="radio" name="fps" value="24 fps"
+                                        class="track-input">24 fps</label>
+                                <label class="pill-label"><input type="radio" name="fps" value="30 fps"
+                                        class="track-input">30 fps</label>
+                                <label class="pill-label"><input type="radio" name="fps" value="60 fps"
+                                        class="track-input">60 fps</label>
+                                <label class="pill-label"><input type="radio" name="fps" value="Match Source"
+                                        class="track-input">Match Source</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="field-group">
+                            <label class="field-label">Export Format</label>
+                            <div class="pill-container">
+                                <label class="pill-label"><input type="radio" name="format" value="MP4/H.264"
+                                        class="track-input">MP4/H.264</label>
+                                <label class="pill-label"><input type="radio" name="format" value="MP4/H.265"
+                                        class="track-input">MP4/H.265</label>
+                                <label class="pill-label"><input type="radio" name="format" value="ProRes"
+                                        class="track-input">ProRes</label>
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Delivery Method</label>
+                            <div class="pill-container">
+                                <label class="pill-label"><input type="radio" name="delivery" value="Google Drive"
+                                        class="track-input">Google Drive</label>
+                                <label class="pill-label"><input type="radio" name="delivery" value="Dropbox"
+                                        class="track-input">Dropbox</label>
+                                <label class="pill-label"><input type="radio" name="delivery" value="WeTransfer"
+                                        class="track-input">WeTransfer</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEC 09 -->
+            <section id="sec-09" class="section-card">
+                <div class="card-header">
+                    <div class="header-num">09</div>
+                    <div class="header-text">
+                        <h3>💼 Brand Identity Cheat Sheet</h3>
+                        <p>So your editor never has to guess at your brand</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <label class="field-label">Brand Colours</label>
+                    <div class="color-picker-row">
+                        <div class="color-picker-card">
+                            <input type="color" class="color-input-native track-input" name="col_primary"
+                                id="c_pri_native" value="#C47B2B"
+                                oninput="document.getElementById('c_pri_hex').value = this.value.toUpperCase()">
+                            <input type="text" class="hex-input track-input" id="c_pri_hex" value="#C47B2B"
+                                placeholder="#HEX"
+                                oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)) document.getElementById('c_pri_native').value = this.value">
+                        </div>
+                        <div class="color-picker-card">
+                            <input type="color" class="color-input-native track-input" name="col_secondary"
+                                id="c_sec_native" value="#2A2015"
+                                oninput="document.getElementById('c_sec_hex').value = this.value.toUpperCase()">
+                            <input type="text" class="hex-input track-input" id="c_sec_hex" value="#2A2015"
+                                placeholder="#HEX"
+                                oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)) document.getElementById('c_sec_native').value = this.value">
+                        </div>
+                        <div class="color-picker-card">
+                            <input type="color" class="color-input-native track-input" name="col_accent"
+                                id="c_acc_native" value="#E8A84C"
+                                oninput="document.getElementById('c_acc_hex').value = this.value.toUpperCase()">
+                            <input type="text" class="hex-input track-input" id="c_acc_hex" value="#E8A84C"
+                                placeholder="#HEX"
+                                oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)) document.getElementById('c_acc_native').value = this.value">
+                        </div>
+                        <div class="color-picker-card">
+                            <input type="color" class="color-input-native track-input" name="col_bg" id="c_bg_native"
+                                value="#FBF7F0"
+                                oninput="document.getElementById('c_bg_hex').value = this.value.toUpperCase()">
+                            <input type="text" class="hex-input track-input" id="c_bg_hex" value="#FBF7F0"
+                                placeholder="#HEX"
+                                oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)) document.getElementById('c_bg_native').value = this.value">
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="field-group">
+                            <label class="field-label">Heading Font</label>
+                            <input type="text" class="std-input track-input" name="brand_heading_font"
+                                placeholder="e.g. Montserrat Bold">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Body / Caption Font</label>
+                            <input type="text" class="std-input track-input" name="brand_body_font"
+                                placeholder="e.g. Open Sans">
+                        </div>
+                    </div>
+
+                    <div class="url-row">
+                        <div class="url-badge">BRAND</div>
+                        <input type="url" class="std-input track-input" name="url_brandkit"
+                            placeholder="Brand Guidelines / Logo folder link">
+                    </div>
+
+                    <label class="field-label">Social Handles</label>
+                    <div class="grid-2">
+                        <input type="text" class="std-input track-input" name="social_ig" placeholder="Instagram @">
+                        <input type="text" class="std-input track-input" name="social_yt" placeholder="YouTube @">
+                        <input type="text" class="std-input track-input" name="social_tt" placeholder="TikTok @">
+                        <input type="text" class="std-input track-input" name="social_li" placeholder="LinkedIn">
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEC 10 -->
+            <section id="sec-10" class="section-card">
+                <div class="card-header">
+                    <div class="header-num">10</div>
+                    <div class="header-text">
+                        <h3>📝 Notes & Sign-off</h3>
+                        <p>Anything else, and confirm you're ready to go</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="field-group is-short">
+                        <label class="field-label">Open Notes</label>
+                        <textarea class="std-input track-input" name="open_notes"
+                            placeholder="Anything not covered above — edge cases, special instructions, what NOT to do"
+                            rows="5"></textarea>
+                    </div>
+                    <div class="grid-2">
+                        <div class="field-group">
+                            <label class="field-label">Number of Revision Rounds Included</label>
+                            <input type="number" class="std-input track-input" name="rounds" placeholder="e.g. 2">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Editor Assigned</label>
+                            <input type="text" class="std-input track-input" name="assigned_editor" placeholder="Name">
+                        </div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="field-group">
+                            <label class="field-label">Client Name (Approving this brief)</label>
+                            <input type="text" class="std-input track-input" name="approver_name"
+                                placeholder="Full Name">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Approval Date</label>
+                            <input type="date" class="std-input track-input" name="approval_date">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- Submit actions -->
+        <div class="submit-section">
+            <h2>Ready to <span class="playfair italic-accent">send it?</span></h2>
+            <p>Export your data to share with your editor.</p>
+            <div style="display: flex; justify-content: center; flex-wrap: wrap;">
+                <button class="btn-primary" onclick="downloadPDF()">✦ Download Brief as PDF</button>
+                <button class="btn-secondary" onclick="copyAnswers()">Copy All Answers</button>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <button class="btn-nav" id="btnPrev" onclick="prevStep()">← Previous</button>
+            <button class="btn-nav" id="btnNext" onclick="nextStep()">Next →</button>
+        </div>
+
+    </div>
+
+    <div class="toast" id="toast">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <span id="toastMsg">Success</span>
+    </div>
+
+    <!-- Reset Button & Modal -->
+    <button class="reset-fab" id="btnReset" onclick="document.getElementById('resetModal').classList.add('show')"
+        title="Reset Form">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+            <path d="M3 3v5h5"></path>
+        </svg>
+    </button>
+
+    <div class="modal-backdrop" id="resetModal">
+        <div class="modal-dialog">
+            <h3>Reset Form?</h3>
+            <p>This will permanently clear all your answers and restart the brief from the beginning. This action cannot
+                be undone.</p>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="document.getElementById('resetModal').classList.remove('show')">No,
+                    Cancel</button>
+                <button class="btn-red" onclick="confirmReset()">Yes, Clear Data</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set today's date
+        document.getElementById('metaDate').valueAsDate = new Date();
+
+        // Data collection
+        function gatherData() {
+            const data = {};
+            const inputs = document.querySelectorAll('.track-input');
+
+            inputs.forEach(el => {
+                if (!el.name) return;
+                const name = el.name.replace('[]', '');
+
+                if (el.type === 'checkbox') {
+                    if (!data[name]) data[name] = [];
+                    if (el.checked) data[name].push(el.value);
+                } else if (el.type === 'radio') {
+                    if (el.checked) data[name] = el.value;
+                } else {
+                    if (el.value.trim() !== '') {
+                        // For hex colors handled specially
+                        if (el.classList.contains('hex-input')) return;
+                        data[name] = el.value;
+                    }
+                }
+            });
+
+            // Grab hex manually to ensure overrides take priority if wanted, but native covers it
+            return data;
+        }
+
+        const fieldMapping = [
+            {
+                section: "Project Details", items: [
+                    { label: "Client Name", name: "meta_client_name" },
+                    { label: "Project Name", name: "meta_project_name" },
+                    { label: "Date", name: "meta_date" },
+                    { label: "Deadline", name: "meta_deadline" }
+                ]
+            },
+            {
+                section: "01. Project Overview", items: [
+                    { label: "Goal of the Video", name: "goal" },
+                    { label: "Target Audience", name: "audience" },
+                    { label: "Platform", name: "platform" },
+                    { label: "Core Message", name: "message" }
+                ]
+            },
+            {
+                section: "02. Creative References", items: [
+                    { label: "Reference 1", name: "ref1_url" },
+                    { label: "What we like (Ref 1)", name: "ref1_likes" },
+                    { label: "Reference 2", name: "ref2_url" },
+                    { label: "What we like (Ref 2)", name: "ref2_likes" },
+                    { label: "Reference 3", name: "ref3_url" },
+                    { label: "What we like (Ref 3)", name: "ref3_likes" }
+                ]
+            },
+            {
+                section: "03. Editing Style & Pacing", items: [
+                    { label: "General Vibe", name: "style" },
+                    { label: "Pacing / Cut Style", name: "pacing" },
+                    { label: "Speed Adjustment", name: "speed" },
+                    { label: "Transitions", name: "transitions" },
+                    { label: "Filler Words to Remove", name: "fillers" }
+                ]
+            },
+            {
+                section: "04. Assets & Resources", items: [
+                    { label: "Footage Link", name: "url_footage" },
+                    { label: "Stock Preferences", name: "stock_pref" },
+                    { label: "B-Roll Link", name: "url_broll" },
+                    { label: "Script Link", name: "url_script" },
+                    { label: "Assets Link", name: "url_assets" }
+                ]
+            },
+            {
+                section: "05. Text & Graphics", items: [
+                    { label: "Primary Font", name: "font_primary" },
+                    { label: "Secondary Font", name: "font_secondary" },
+                    { label: "Caption Style", name: "caption_style" },
+                    { label: "Caption Colour", name: "caption_color" },
+                    { label: "Caption Size/Weight", name: "caption_size" },
+                    { label: "Overlays", name: "overlays" },
+                    { label: "Branding Elements", name: "branding" },
+                    { label: "Branding Instructions", name: "branding_notes" }
+                ]
+            },
+            {
+                section: "06. Colour & Cinematic Look", items: [
+                    { label: "Overall Grade", name: "grade" },
+                    { label: "Grade Reference", name: "grade_ref" },
+                    { label: "Skin Tone", name: "skin" },
+                    { label: "Sharpening", name: "sharpen" },
+                    { label: "Additional Look Notes", name: "look_notes" }
+                ]
+            },
+            {
+                section: "07. Audio & Music", items: [
+                    { label: "Music Genre / Mood", name: "music_mood" },
+                    { label: "Specific Track/Playlist", name: "music_url" },
+                    { label: "Sound Effects", name: "sfx" },
+                    { label: "Background Music Level", name: "lvl_bgm", suffix: " dB" },
+                    { label: "Vocals / Voiceover Level", name: "lvl_vox", suffix: " dB" },
+                    { label: "SFX Level", name: "lvl_sfx", suffix: " dB" }
+                ]
+            },
+            {
+                section: "08. Technical Specifications", items: [
+                    { label: "Aspect Ratio", name: "ratio" },
+                    { label: "Resolution", name: "resolution" },
+                    { label: "Frame Rate", name: "fps" },
+                    { label: "Export Format", name: "format" },
+                    { label: "Delivery Method", name: "delivery" }
+                ]
+            },
+            {
+                section: "09. Brand Identity", items: [
+                    { label: "Primary Colour", name: "col_primary" },
+                    { label: "Secondary Colour", name: "col_secondary" },
+                    { label: "Accent Colour", name: "col_accent" },
+                    { label: "Background Colour", name: "col_bg" },
+                    { label: "Heading Font", name: "brand_heading_font" },
+                    { label: "Body Font", name: "brand_body_font" },
+                    { label: "Brand Guidelines", name: "url_brandkit" },
+                    { label: "Instagram", name: "social_ig" },
+                    { label: "YouTube", name: "social_yt" },
+                    { label: "TikTok", name: "social_tt" },
+                    { label: "LinkedIn", name: "social_li" }
+                ]
+            },
+            {
+                section: "10. Notes & Sign-off", items: [
+                    { label: "Open Notes", name: "open_notes" },
+                    { label: "Revision Rounds", name: "rounds" },
+                    { label: "Assigned Editor", name: "assigned_editor" },
+                    { label: "Approver Name", name: "approver_name" },
+                    { label: "Approval Date", name: "approval_date" }
+                ]
+            }
+        ];
+
+        function buildStructuredData() {
+            const data = gatherData();
+            let textContent = "VIDEO EDITING BRIEF\n===================\n\n";
+
+            const htmlContainer = document.createElement('div');
+            htmlContainer.id = "pdf-content";
+
+            // Custom styling for premium 10-page PDF design
+            const styleStr = `
+            @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400..700;1,400..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+            
+            #pdf-content {
+                font-family: 'DM Sans', sans-serif;
+                width: 390px;
+                max-width: 390px;
+                background: #FFFDF9;
+                box-sizing: border-box;
+                display: block;
+                margin: 0;
+                padding: 0;
+            }
+            .pdf-cover {
+                width: 390px;
+                height: 840px; /* Barely under 844px to prevent accidental wrap */
+                background: #2A2015;
+                color: #FFFDF9;
+                padding: 60px 40px;
+                box-sizing: border-box;
+                display: flex;
+                flex-direction: column;
+                position: relative;
+                overflow: hidden;
+            }
+            .pdf-cover::before {
+                content: '';
+                position: absolute;
+                top: 0; right: 0; bottom: 0; left: 0;
+                background: radial-gradient(circle at top right, rgba(196,123,43,0.15) 0%, rgba(42,32,21,0) 60%);
+                pointer-events: none;
+            }
+            .cover-kicker { color: #E8A84C; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px; font-weight: bold; position: relative; z-index: 2; }
+            .cover-title { font-family: 'Playfair Display', serif; font-size: 40px; line-height: 1.1; margin: 0 0 16px 0; color: #FFF; position: relative; z-index: 2; word-wrap: break-word; }
+            .cover-subtitle { font-size: 14px; color: rgba(255,255,255,0.7); font-style: italic; position: relative; z-index: 2; }
+            
+            .cover-meta { margin-top: auto; display: flex; flex-direction: column; gap: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; position: relative; z-index: 2; }
+            .meta-block { display: flex; flex-direction: column; gap: 4px; }
+            .meta-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); }
+            .meta-val { font-size: 14px; font-weight: bold; color: #FFFDF9; }
+            
+            .pdf-page {
+                width: 390px;
+                background: #FFFDF9;
+                color: #2A2015;
+                padding: 40px 30px;
+                box-sizing: border-box;
+                break-before: page;
+                page-break-before: always;
+                position: relative;
+            }
+            .pdf-page-footer {
+                margin-top: 40px;
+                display: flex; justify-content: space-between;
+                border-top: 1px solid #EDE4D3;
+                padding-top: 16px;
+                font-size: 9px; color: #A08C72; text-transform: uppercase; letter-spacing: 1px;
+                font-weight: bold;
+            }
+            .page-num-bg {
+                position: absolute;
+                top: 20px; right: 30px;
+                font-family: 'Playfair Display', serif;
+                font-size: 56px;
+                font-weight: bold;
+                color: rgba(196,123,43,0.06);
+                line-height: 1;
+                pointer-events: none;
+                margin: 0;
+            }
+            .page-title {
+                font-family: 'Playfair Display', serif;
+                font-size: 24px;
+                color: #2A2015;
+                margin: 0 0 32px 0;
+                padding-bottom: 16px;
+                border-bottom: 2px solid #C47B2B;
+                position: relative;
+                z-index: 2;
+                max-width: 85%;
+            }
+            
+            .data-grid { display: flex; flex-direction: column; gap: 16px; position: relative; z-index: 2; }
+            .data-group { display: flex; flex-direction: column; gap: 4px; }
+            .data-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #A08C72; font-weight: bold; }
+            .data-val { font-size: 14px; color: #2A2015; line-height: 1.5; word-wrap: break-word; font-weight: 500; }
+            .data-val a { color: #C47B2B; text-decoration: none; }
+            
+            .swatch-circ { display: inline-block; width: 14px; height: 14px; border-radius: 50%; vertical-align: middle; margin-right: 8px; border: 1px solid rgba(0,0,0,0.1); }
+            
+            .pdf-watermark {
+                text-align: center;
+                font-size: 10px;
+                color: #A08C72;
+                letter-spacing: 1px;
+                padding: 12px 0 0 0;
+                margin-top: auto;
+                position: relative;
+                z-index: 2;
+            }
+            .pdf-watermark .heart { color: #e74c3c; }
+            .pdf-watermark a { color: #A08C72; text-decoration: none; }
+            .pdf-watermark a:hover { text-decoration: underline; }
+        `;
+
+            let clientName = data['meta_client_name'] || 'Client';
+            let projectName = data['meta_project_name'] || 'Project';
+            let prjDate = data['meta_date'] || '';
+            let deadline = data['meta_deadline'] || '';
+
+            let htmlContent = `
+            <style>${styleStr}</style>
+            
+            <div class="pdf-cover">
+                <div class="cover-kicker">✦ Video Editing Brief</div>
+                <h1 class="cover-title">${projectName}</h1>
+                <div class="cover-subtitle">Project Requirements & Asset Guidelines</div>
+                
+                <div class="cover-meta">
+                    <div class="meta-block">
+                        <span class="meta-label">Client</span>
+                        <span class="meta-val">${clientName}</span>
+                    </div>
+                    <div class="meta-block">
+                        <span class="meta-label">Date Submitted</span>
+                        <span class="meta-val">${prjDate || 'N/A'}</span>
+                    </div>
+                    <div class="meta-block">
+                        <span class="meta-label">Target Deadline</span>
+                        <span class="meta-val">${deadline || 'N/A'}</span>
+                    </div>
+                </div>
+                <div class="pdf-watermark"><a href="https://www.letsbuildbrand.com" target="_blank">Made with <span class="heart">❤️</span> by LBB - Lets Build Brand</a></div>
+            </div>
+        `;
+
+            let pageIndex = 1;
+            fieldMapping.forEach(sec => {
+                if (sec.section === 'Project Details') return;
+
+                let sectionText = `${sec.section.toUpperCase()}\n${'-'.repeat(sec.section.length)}\n`;
+                let sectionHasDataText = false;
+                let sectionHasDataHTML = false;
+
+                let secNumMatch = sec.section.match(/^(\d+)\./);
+                let secNum = secNumMatch ? secNumMatch[1] : `0${pageIndex}`;
+                let secTitle = sec.section.replace(/^\d+\.\s*/, '');
+
+                let sectionHTML = `
+            <div class="pdf-page">
+                <div class="page-num-bg">${secNum}</div>
+                <h2 class="page-title">${secTitle}</h2>
+                <div class="data-grid">
+            `;
+
+                sec.items.forEach(item => {
+                    let val = data[item.name];
+                    if (val && (Array.isArray(val) ? val.length > 0 : true)) {
+
+                        let displayVal = Array.isArray(val) ? val.join(', ') : val;
+                        if (item.suffix) displayVal += item.suffix;
+
+                        sectionText += `${item.label}: ${displayVal}\n`;
+                        sectionHasDataText = true;
+
+                        if (item.name.startsWith('meta_')) return;
+                        sectionHasDataHTML = true;
+
+                        let swatch = '';
+                        if (item.name.startsWith('col_') && /^#[0-9A-Fa-f]{6}$/i.test(displayVal)) {
+                            swatch = `<span class="swatch-circ" style="background-color:${displayVal};"></span>`;
+                        }
+
+                        let formattedVal = displayVal;
+                        if (typeof displayVal === 'string' && displayVal.startsWith('http')) {
+                            formattedVal = `<a href="${displayVal}" target="_blank">${displayVal}</a>`;
+                        } else if (typeof displayVal === 'string') {
+                            formattedVal = formattedVal.replace(/\n/g, '<br>');
+                        }
+
+                        sectionHTML += `
+                        <div class="data-group">
+                            <div class="data-label">${item.label}</div>
+                            <div class="data-val">${swatch}${formattedVal}</div>
+                        </div>
+                    `;
+                    }
+                });
+
+                sectionHTML += `
+                </div>
+                <div class="pdf-page-footer">
+                    <span>${clientName} — ${projectName}</span>
+                    <span>Page ${pageIndex}</span>
+                </div>
+                <div class="pdf-watermark"><a href="https://www.letsbuildbrand.com" target="_blank">Made with <span class="heart">❤️</span> by LBB - Lets Build Brand</a></div>
+            </div>
+            `;
+                sectionText += `\n`;
+
+                if (sectionHasDataText) {
+                    textContent += sectionText;
+                }
+                if (sectionHasDataHTML) {
+                    htmlContent += sectionHTML;
+                    pageIndex++;
+                }
+            });
+
+            htmlContainer.innerHTML = htmlContent;
+            return { textContent, htmlContainer };
+        }
+
+        function downloadPDF() {
+            if (typeof html2pdf === 'undefined') {
+                showToast("Error: PDF library not loaded yet.");
+                return;
+            }
+
+            const { htmlContainer } = buildStructuredData();
+            const clientInput = document.querySelector('input[name="meta_client_name"]');
+            const projectInput = document.querySelector('input[name="meta_project_name"]');
+
+            const clientName = clientInput && clientInput.value ? clientInput.value : 'Client';
+            const projectName = projectInput && projectInput.value ? projectInput.value : 'Project';
+
+            // NUCLEAR OPTION: Use a real <iframe> AND run html2pdf INSIDE it.
+            // Why? html2canvas uses getBoundingClientRect() to find capture coordinates.
+            // Cross-document (parent → iframe) coordinate calculation is buggy on desktop.
+            // Running html2pdf inside the iframe avoids ALL cross-document issues.
+
+            var iframe = document.createElement('iframe');
+            iframe.style.cssText = 'position:fixed; left:0; top:0; width:390px; height:844px; border:none; z-index:-9999;';
+            document.body.appendChild(iframe);
+
+            var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            iframeDoc.open();
+            iframeDoc.write('<!DOCTYPE html><html><head><meta charset="UTF-8">' +
+                '<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"><\/script>' +
+                '<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400..700;1,400..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">' +
+                '<style>*{margin:0;padding:0;box-sizing:border-box;}html,body{width:390px;display:block;background:#FFFDF9;-webkit-print-color-adjust:exact;print-color-adjust:exact;}</style>' +
+                '</head><body>' + htmlContainer.outerHTML + '</body></html>');
+            iframeDoc.close();
+
+            showToast("Generating PDF... Please wait.");
+
+            var pdfFilename = (clientName + '_' + projectName + '_Brief.pdf').replace(/\s+/g, '_');
+
+            // Wait for iframe script + fonts to fully load
+            setTimeout(function () {
+                var iframeWindow = iframe.contentWindow;
+                var target = iframeDoc.getElementById('pdf-content');
+
+                if (!target || typeof iframeWindow.html2pdf === 'undefined') {
+                    showToast("Error: PDF resources not loaded. Retrying...");
+                    // Retry after another 2s
+                    setTimeout(function () {
+                        var target2 = iframeDoc.getElementById('pdf-content');
+                        if (!target2 || typeof iframeWindow.html2pdf === 'undefined') {
+                            showToast("Error: Could not generate PDF.");
+                            document.body.removeChild(iframe);
+                            return;
+                        }
+                        generateFromIframe(iframeWindow, target2, pdfFilename, iframe);
+                    }, 2000);
+                    return;
+                }
+
+                generateFromIframe(iframeWindow, target, pdfFilename, iframe);
+            }, 3000);
+        }
+
+        function generateFromIframe(iframeWindow, target, pdfFilename, iframe) {
+            var opt = {
+                margin: 0,
+                filename: pdfFilename,
+                image: { type: 'jpeg', quality: 1.0 },
+                html2canvas: {
+                    scale: 2,
+                    useCORS: true,
+                    letterRendering: true,
+                    windowWidth: 390,
+                    width: 390,
+                    scrollX: 0,
+                    scrollY: 0,
+                    x: 0,
+                    y: 0
+                },
+                jsPDF: { unit: 'px', format: [390, 844], orientation: 'portrait' },
+                pagebreak: { mode: 'css' }
+            };
+
+            // Call html2pdf from INSIDE the iframe's own window context
+            iframeWindow.html2pdf()
+                .set(opt)
+                .from(target)
+                .toPdf()
+                .get('pdf')
+                .then(function (pdfObj) {
+                    // Open in parent window
+                    window.open(pdfObj.output('bloburl'), '_blank');
+                })
+                .save()
+                .then(function () {
+                    if (iframe.parentNode) {
+                        iframe.parentNode.removeChild(iframe);
+                    }
+                    showToast("Brief downloaded and opened in new tab!");
+                })
+                .catch(function (err) {
+                    console.error(err);
+                    if (iframe.parentNode) {
+                        iframe.parentNode.removeChild(iframe);
+                    }
+                    showToast("Failed to generate PDF.");
+                });
+        }
+
+        function copyAnswers() {
+            const { textContent, htmlContainer } = buildStructuredData();
+
+            // Attempt to copy both rich HTML and Plain Text formatting using modern Clipboard API
+            try {
+                const blobHtml = new Blob([htmlContainer.innerHTML], { type: "text/html" });
+                const blobText = new Blob([textContent], { type: "text/plain" });
+                const clipboardData = [new ClipboardItem({
+                    "text/html": blobHtml,
+                    "text/plain": blobText
+                })];
+
+                navigator.clipboard.write(clipboardData).then(() => {
+                    showToast("All answers copied to clipboard!");
+                }).catch(() => {
+                    // Fallback for browsers that don't support ClipboardItem well
+                    navigator.clipboard.writeText(textContent).then(() => {
+                        showToast("Answers copied (text format)!");
+                    });
+                });
+            } catch (err) {
+                // Fallback for older browsers
+                navigator.clipboard.writeText(textContent).then(() => {
+                    showToast("Answers copied (text format)!");
+                });
+            }
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        // Progress logic
+        const allInputs = document.querySelectorAll('.track-input');
+        const totalInputs = 40; // Approx estimation factor
+        const progBar = document.getElementById('topProgress');
+
+        function updateProgress() {
+            let filled = 0;
+            let checkedGroups = new Set();
+
+            allInputs.forEach(el => {
+                if (el.type === 'checkbox' || el.type === 'radio') {
+                    if (el.checked) checkedGroups.add(el.name);
+                } else if (el.value.trim() !== '') {
+                    filled++;
+                }
+            });
+
+            // Count group as 1
+            filled += checkedGroups.size;
+
+            let percent = Math.min(Math.round((filled / totalInputs) * 100), 100);
+            progBar.style.width = percent + '%';
+
+            // Auto-save logic
+            autoSaveData();
+        }
+
+        allInputs.forEach(el => el.addEventListener('input', updateProgress));
+        allInputs.forEach(el => el.addEventListener('change', updateProgress));
+
+        window.briefType = 'detailed'; // default
+
+        // Autosave Persistence
+        function autoSaveData() {
+            const formData = gatherData();
+            const state = {
+                briefType: window.briefType,
+                step: currentStepIndex,
+                answers: formData
+            };
+            localStorage.setItem('interactive_brief_autosave', JSON.stringify(state));
+        }
+
+        function loadSavedData() {
+            const raw = localStorage.getItem('interactive_brief_autosave');
+            if (!raw) return null;
+            try {
+                return JSON.parse(raw);
+            } catch {
+                return null;
+            }
+        }
+
+        function applySavedData(data) {
+            if (!data || !data.answers) return;
+
+            if (data.briefType) window.briefType = data.briefType;
+            else window.briefType = 'detailed';
+
+            allInputs.forEach(el => {
+                if (!el.name) return;
+                const cleanName = el.name.replace('[]', '');
+                const savedValue = data.answers[cleanName];
+
+                if (savedValue === undefined) return;
+
+                if (el.type === 'checkbox') {
+                    if (Array.isArray(savedValue) && savedValue.includes(el.value)) {
+                        el.checked = true;
+                    }
+                } else if (el.type === 'radio') {
+                    if (savedValue === el.value) {
+                        el.checked = true;
+                    }
+                } else {
+                    if (!el.classList.contains('hex-input')) {
+                        el.value = savedValue;
+                    }
+                }
+            });
+
+            // Trigger visual updates for specific inputs like sliders and hex colors
+            document.querySelectorAll('input[type="range"]').forEach(s => {
+                s.dispatchEvent(new Event('input', { bubbles: true }));
+            });
+            document.querySelectorAll('.color-input-native').forEach(c => {
+                c.dispatchEvent(new Event('input', { bubbles: true }));
+            });
+
+            updateProgress();
+        }
+
+        // Modal Reset Functionality
+        function confirmReset() {
+            localStorage.removeItem('interactive_brief_autosave');
+            allInputs.forEach(el => {
+                if (el.type === 'checkbox' || el.type === 'radio') {
+                    el.checked = false;
+                } else if (el.type === 'range') {
+                    el.value = el.defaultValue;
+                    el.dispatchEvent(new Event('input', { bubbles: true }));
+                } else if (el.type === 'color') {
+                    el.value = el.defaultValue; // Will revert to HTML source def
+                } else {
+                    el.value = '';
+                }
+            });
+
+            // Reset Date specifically
+            const dateInput = document.getElementById('metaDate');
+            if (dateInput) dateInput.valueAsDate = new Date();
+
+            document.getElementById('resetModal').classList.remove('show');
+            updateProgress();
+            showStep(0);
+            showToast("Form has been reset");
+        }
+
+        // JotForm Flow Logic (Step-by-Step Questions)
+        const steps = [];
+
+        steps.push({ type: 'hero', el: document.querySelector('.hero') });
+
+        // Group questions into step-wrappers
+        document.querySelectorAll('.section-card').forEach(sec => {
+            const body = sec.querySelector('.card-body');
+            const children = Array.from(body.children);
+            body.innerHTML = '';
+            let currentWrapper = null;
+
+            children.forEach(child => {
+                if (child.classList.contains('divider')) return;
+
+                // Mark children for grouping
+                let isShort = false;
+                if (child.classList.contains('is-short') || child.querySelector('.is-short')) isShort = true;
+
+                if (child.tagName === 'LABEL') {
+                    currentWrapper = document.createElement('div');
+                    currentWrapper.className = 'step-wrapper';
+                    if (isShort) currentWrapper.classList.add('is-short');
+                    currentWrapper.appendChild(child);
+                    body.appendChild(currentWrapper);
+                }
+                else if (child.classList.contains('tip-box')) {
+                    if (currentWrapper) currentWrapper.appendChild(child);
+                }
+                else if (currentWrapper && currentWrapper.lastElementChild && currentWrapper.lastElementChild.tagName === 'LABEL' && !child.classList.contains('field-group') && !child.classList.contains('url-row')) {
+                    if (isShort) currentWrapper.classList.add('is-short');
+                    currentWrapper.appendChild(child);
+                }
+                else {
+                    currentWrapper = document.createElement('div');
+                    currentWrapper.className = 'step-wrapper';
+                    if (isShort) currentWrapper.classList.add('is-short');
+                    currentWrapper.appendChild(child);
+                    body.appendChild(currentWrapper);
+                }
+            });
+
+            // Add each wrapper as a step
+            sec.querySelectorAll('.step-wrapper').forEach(w => {
+                steps.push({ type: 'question', card: sec, el: w });
+            });
+        });
+
+        steps.push({ type: 'submit', el: document.querySelector('.submit-section') });
+
+        let currentStepIndex = 0;
+        const btnPrev = document.getElementById('btnPrev');
+        const btnNext = document.getElementById('btnNext');
+        const formBody = document.querySelector('.form-body');
+
+        function showStep(index, fromIndex = -1) {
+            if (index < 0) index = 0;
+            if (index >= steps.length) index = steps.length - 1;
+
+            const isReverse = index < fromIndex;
+
+            steps.forEach((step, i) => {
+                const isTarget = (i === index);
+
+                if (isTarget) {
+                    if (step.type === 'question') {
+                        step.card.classList.add('active');
+                        step.el.classList.add('step-active');
+                        if (isReverse) step.el.classList.add('reverse'); else step.el.classList.remove('reverse');
+                    } else {
+                        step.el.classList.add('active');
+                        if (isReverse) step.el.classList.add('reverse'); else step.el.classList.remove('reverse');
+                    }
+                } else {
+                    if (step.type === 'question') {
+                        step.el.classList.remove('step-active', 'reverse');
+                    } else {
+                        step.el.classList.remove('active', 'reverse');
+                    }
+                }
+            });
+
+            // Hide section cards that don't have an active step inside
+            document.querySelectorAll('.section-card').forEach(card => {
+                if (!card.querySelector('.step-active')) {
+                    card.classList.remove('active');
+                }
+            });
+
+            currentStepIndex = index;
+
+            // Form-body / Hero toggle logic
+            if (steps[index].type === 'hero' || steps[index].type === 'submit') {
+                formBody.style.display = 'none';
+            } else {
+                formBody.style.display = 'flex';
+            }
+
+            // Clear any leftover inline display styles to ensure CSS handles visibility properly
+            steps.forEach(s => {
+                if (s.el) s.el.style.display = '';
+            });
+
+            // Action Buttons Update
+            if (currentStepIndex === 0) {
+                btnPrev.style.display = 'none';
+                btnNext.style.display = 'flex';
+                btnNext.innerHTML = 'Start Brief →';
+            } else if (currentStepIndex === steps.length - 1) {
+                btnPrev.style.display = 'flex';
+                btnNext.style.display = 'none';
+            } else {
+                btnPrev.style.display = 'flex';
+                btnNext.style.display = 'flex';
+                btnNext.innerHTML = 'Next →';
+            }
+
+            // Auto-scroll to top smoothly so headers aren't cut off on short screens
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function getValidStep(startIndex, direction) {
+            let i = startIndex;
+            while (i >= 0 && i < steps.length) {
+                let isValid = true;
+                if (window.briefType === 'short' && steps[i].type === 'question') {
+                    if (!steps[i].el.classList.contains('is-short')) {
+                        isValid = false;
+                    }
+                }
+                if (isValid) return i;
+                i += direction;
+            }
+            return direction > 0 ? steps.length - 1 : 0;
+        }
+
+        function nextStep() {
+            const nextIdx = getValidStep(currentStepIndex + 1, 1);
+            showStep(nextIdx, currentStepIndex);
+            autoSaveData();
+        }
+
+        function prevStep() {
+            const prevIdx = getValidStep(currentStepIndex - 1, -1);
+            showStep(prevIdx, currentStepIndex);
+            autoSaveData();
+        }
+
+        function interceptStep(dir) {
+            if (dir === 'next') nextStep();
+            else if (dir === 'prev') prevStep();
+        }
+
+
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+                interceptStep('next');
+            }
+        });
+
+        // Smart Auto-Advance for Radios
+        document.querySelectorAll('.step-wrapper').forEach((wrap) => {
+            const textInputs = wrap.querySelectorAll('input[type="text"], input[type="url"], input[type="number"], input[type="date"], textarea');
+            const checkInputs = wrap.querySelectorAll('input[type="checkbox"]');
+            const radioGroups = new Set(Array.from(wrap.querySelectorAll('input[type="radio"]')).map(r => r.name));
+
+            if (textInputs.length === 0 && checkInputs.length === 0 && radioGroups.size === 1) {
+                wrap.querySelectorAll('input[type="radio"]').forEach(radio => {
+                    const newClone = radio.cloneNode(true);
+                    radio.parentNode.replaceChild(newClone, radio);
+                    newClone.addEventListener('change', () => {
+                        updateProgress(); // Need to call manully because of clone
+                        setTimeout(() => {
+                            const idx = steps.findIndex(s => s.el === wrap);
+                            if (currentStepIndex === idx) interceptStep('next');
+                        }, 450);
+                    });
+                });
+            }
+        });
+
+
+        // Initialize Application
+        const savedState = loadSavedData();
+        if (savedState) {
+            applySavedData(savedState);
+            showStep(savedState.step || 0);
+            showToast("Auto-loaded your previous session");
+        } else {
+            showStep(0);
+        }
+
+    </script>
+</body>
+
+</html>
