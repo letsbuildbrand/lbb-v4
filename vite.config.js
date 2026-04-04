@@ -28,6 +28,17 @@ export default defineConfig({
         ]
       },
       workbox: {
+        // Don't precache HTML pages - always load them from network
+        // This prevents stale cached HTML from causing 404s on new routes
+        navigateFallback: null,
+        navigateFallbackDenylist: [/.*/],
+        // Disable precaching manifest - we only want runtime caching
+        // This prevents old cached app shell from hiding new routes
+        globPatterns: [],
+        // Force new SW to take over immediately for all clients
+        skipWaiting: true,
+        clientsClaim: true,
+        // Only cache media files, skip all other requests
         runtimeCaching: [
           {
             urlPattern: ({ url }) => url.pathname.endsWith('.mp4'),
@@ -37,6 +48,21 @@ export default defineConfig({
               expiration: {
                 maxEntries: 50,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30 Days
+              },
+              cacheableResponse: {
+                statuses: [0, 200]
+              }
+            }
+          },
+          // Cache images, fonts, and other static assets with NetworkFirst
+          {
+            urlPattern: /\.(png|jpg|jpeg|gif|svg|webp|ico|woff|woff2|ttf|eot|css|js)$/,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'lbb-static-assets-cache',
+              expiration: {
+                maxEntries: 100,
+                maxAgeSeconds: 60 * 60 * 24 * 7, // 7 Days
               },
               cacheableResponse: {
                 statuses: [0, 200]
