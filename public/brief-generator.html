@@ -2087,15 +2087,27 @@
                 .toPdf()
                 .get('pdf')
                 .then(function (pdfObj) {
-                    // Open in parent window
-                    window.open(pdfObj.output('bloburl'), '_blank');
-                })
-                .save()
-                .then(function () {
-                    if (iframe.parentNode) {
-                        iframe.parentNode.removeChild(iframe);
-                    }
-                    showToast("Brief downloaded and opened in new tab!");
+                    var pdfBlob = pdfObj.output('blob');
+                    var blobUrl = URL.createObjectURL(pdfBlob);
+
+                    // Create an anchor and click it to trigger download
+                    // Works on desktop browsers and iOS Safari
+                    var anchor = document.createElement('a');
+                    anchor.href = blobUrl;
+                    anchor.download = pdfFilename;
+                    anchor.style.display = 'none';
+                    document.body.appendChild(anchor);
+                    anchor.click();
+                    document.body.removeChild(anchor);
+
+                    // Clean up blob URL after a short delay
+                    setTimeout(function () {
+                        URL.revokeObjectURL(blobUrl);
+                        if (iframe.parentNode) {
+                            iframe.parentNode.removeChild(iframe);
+                        }
+                        showToast("Brief downloaded!");
+                    }, 500);
                 })
                 .catch(function (err) {
                     console.error(err);
