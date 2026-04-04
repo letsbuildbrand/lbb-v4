@@ -6,7 +6,7 @@ import {
   Youtube, TrendingUp, DollarSign, MousePointer2,
   CheckCircle2, Calendar, Clock, ChevronRight, ChevronLeft,
   Users, Zap, HelpCircle, ChevronDown, BadgeCheck,
-  Layers, BarChart3, Lock, Volume2, VolumeX, MapPin, Mail, Linkedin, Twitter, Instagram
+  Layers, BarChart3, Lock, Volume2, VolumeX, MapPin, Mail, Linkedin, Twitter, Instagram, FileText
 } from 'lucide-react';
 import createGlobe from 'cobe';
 
@@ -165,26 +165,31 @@ const VideoCarousel = ({ unmutedId, setUnmutedId }) => {
   );
 };
 
-const Navbar = ({ onOpenModal, onNavigate }) => {
+const Navbar = ({ onOpenModal }) => {
   const navigate = useNavigate();
   return (
-    <nav className="fixed top-0 left-0 right-0 z-40 glass-nav px-6 py-4 flex justify-between items-center bg-slate-950/80 backdrop-blur-md border-b border-white/5">
+    <nav className="fixed top-0 left-0 right-0 z-50 glass-nav px-6 py-4 flex justify-between items-center bg-slate-950/80 backdrop-blur-md border-b border-white/5">
       <div className="flex items-center gap-12">
-        <button onClick={() => onNavigate('home')} className="text-2xl font-bold font-display tracking-tighter text-white">LBB.</button>
-        <div className="hidden md:flex gap-8 text-sm font-medium text-gray-400">
-          <button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('work')?.scrollIntoView(), 100); }} className="hover:text-white transition-colors">Work</button>
-          <button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('why-us')?.scrollIntoView(), 100); }} className="hover:text-white transition-colors">Why Us</button>
-          <button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('protocol')?.scrollIntoView(), 100); }} className="hover:text-white transition-colors">Protocol</button>
-          <button onClick={() => navigate('/teams')} className="hover:text-white transition-colors">Team</button>
-          <button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('faq')?.scrollIntoView(), 100); }} className="hover:text-white transition-colors">FAQ</button>
+        <button onClick={() => navigate('/')} className="text-2xl font-bold font-display tracking-tighter text-white">LBB.</button>
+        <div className="hidden lg:flex gap-8 text-[11px] uppercase tracking-widest font-bold text-gray-400">
+          <button onClick={() => { navigate('/'); setTimeout(() => document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className="hover:text-amber-500 transition-colors">Work</button>
+          <button onClick={() => { navigate('/'); setTimeout(() => document.getElementById('why-us')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className="hover:text-amber-500 transition-colors">The Engine</button>
+          <button onClick={() => { navigate('/'); setTimeout(() => document.getElementById('protocol')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className="hover:text-amber-500 transition-colors">Protocol</button>
+          <button onClick={() => navigate('/testimonials')} className="hover:text-amber-500 transition-colors">Testimonials</button>
+          <button onClick={() => navigate('/teams')} className="hover:text-amber-500 transition-colors">The Unit</button>
+          <button onClick={() => navigate('/brief-generator')} className="hover:text-orange transition-colors px-3 py-1 bg-white/5 rounded-full border border-white/10 group">
+            <span className="flex items-center gap-1.5"><FileText className="w-3 h-3 group-hover:text-orange" /> Open Brief</span>
+          </button>
         </div>
       </div>
-      <button
-        onClick={onOpenModal}
-        className="bg-white text-black px-6 py-2 font-bold font-display tracking-wide hover:bg-orange hover:text-white transition-colors duration-300 text-sm uppercase"
-      >
-        Book Strategy
-      </button>
+      <div className="flex items-center gap-4">
+        <button
+          onClick={onOpenModal}
+          className="bg-white text-black px-6 py-2 font-bold font-display tracking-wide hover:bg-orange hover:text-white transition-colors duration-300 text-xs uppercase"
+        >
+          Book Strategy
+        </button>
+      </div>
     </nav>
   );
 };
