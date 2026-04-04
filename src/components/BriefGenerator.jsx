@@ -263,50 +263,83 @@ const BriefGenerator = () => {
       displayToast("Error: PDF library not loaded yet.");
       return;
     }
+
+    displayToast("Generating PDF... Please wait.");
+
+    // IOS SAFARI POPUP WORKAROUND:
+    // Open the new tab synchronously during the click event, before any async/timeouts.
+    const newTab = window.open('', '_blank');
+    if (newTab) {
+      newTab.document.write('<div style="font-family:sans-serif; padding: 40px; text-align:center;">Generating your Video Brief...<br><br>Please wait a few seconds.</div>');
+    }
+
     const { htmlContainer } = buildStructuredData();
     const clientName = formData['meta_client_name'] || 'Client';
     const projectName = formData['meta_project_name'] || 'Project';
     const pdfFilename = (clientName + '_' + projectName + '_Brief.pdf').replace(/\s+/g, '_');
 
-    displayToast("Generating PDF... This may take a moment.");
+    // NUCLEAR OPTION PRESERVED: Use iframe to prevent cross-document rendering bugs
+    const iframe = document.createElement('iframe');
+    iframe.style.cssText = 'position:fixed; left:0; top:0; width:390px; height:844px; border:none; z-index:-9999;';
+    document.body.appendChild(iframe);
+    
+    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+    iframeDoc.open();
+    iframeDoc.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+      <style>*{margin:0;padding:0;box-sizing:border-box;}html,body{width:390px;display:block;background:#FFFDF9;}</style>
+      </head><body><div id="pdf-wrapper">${htmlContainer.innerHTML}</div></body></html>`);
+    iframeDoc.close();
 
-    const pContainer = document.createElement('div');
-    pContainer.id = "pdf-render-target";
-    pContainer.style.cssText = 'position:absolute; left:-9999px; top:0; width:390px; background:#FFFDF9;';
-    pContainer.innerHTML = htmlContainer.innerHTML;
-    document.body.appendChild(pContainer);
+    // Wait for iframe and fonts
+    setTimeout(() => {
+      const iframeWindow = iframe.contentWindow;
+      const target = iframeDoc.getElementById('pdf-wrapper');
+      
+      if (!target || typeof iframeWindow.html2pdf === 'undefined') {
+          if (newTab) newTab.close();
+          document.body.removeChild(iframe);
+          displayToast("Error: Resources not loaded.");
+          return;
+      }
 
-    const opt = {
-      margin: 0,
-      filename: pdfFilename,
-      image: { type: 'jpeg', quality: 1.0 },
-      html2canvas: { scale: 1.5, useCORS: true, windowWidth: 390 },
-      jsPDF: { unit: 'px', format: [390, 844], orientation: 'portrait' }
-    };
+      const opt = {
+        margin: 0,
+        filename: pdfFilename,
+        image: { type: 'jpeg', quality: 1.0 },
+        html2canvas: { scale: 2, useCORS: true, windowWidth: 390 },
+        jsPDF: { unit: 'px', format: [390, 844], orientation: 'portrait' },
+        pagebreak: { mode: 'css' }
+      };
 
-    // Use the original blob-opening logic for iOS compatibility
-    window.html2pdf()
-      .set(opt)
-      .from(pContainer)
-      .toPdf()
-      .get('pdf')
-      .then((pdf) => {
-          // Open in a new tab first (safest for iOS)
-          const blobUrl = pdf.output('bloburl');
-          const newTab = window.open(blobUrl, '_blank');
-          
-          if (!newTab || newTab.closed || typeof newTab.closed === 'undefined') {
-              // Fallback if popup blocked: Direct save
-              pdf.save();
-          }
-          
-          document.body.removeChild(pContainer);
-          displayToast("Brief Generated! Check your tabs or downloads.");
-      }).catch(e => {
-          console.error(e);
-          if (pContainer.parentNode) document.body.removeChild(pContainer);
-          displayToast("Generation failed.");
-      });
+      iframeWindow.html2pdf()
+        .set(opt)
+        .from(target)
+        .toPdf()
+        .get('pdf')
+        .then((pdf) => {
+            const blobUrl = pdf.output('bloburl');
+            
+            // Redirect the waiting tab to the PDF
+            if (newTab && !newTab.closed) {
+                newTab.location.href = blobUrl;
+            } else {
+                // If tab was blocked or closed, try saving directly
+                window.open(blobUrl, '_blank') || pdf.save();
+            }
+        })
+        .save()
+        .then(() => {
+            if (iframe.parentNode) document.body.removeChild(iframe);
+            displayToast("Brief Generated Successfully!");
+        })
+        .catch(e => {
+            console.error(e);
+            if (newTab) newTab.close();
+            if (iframe.parentNode) document.body.removeChild(iframe);
+            displayToast("Failed to generate PDF.");
+        });
+    }, 2500);
   };
 
   const copyBrief = () => {
