@@ -270,37 +270,39 @@ const BriefGenerator = () => {
 
     displayToast("Generating PDF... Please wait.");
 
-    // PDF Iframe Logic (NUCLEAR OPTION PRESERVED)
-    const iframe = document.createElement('iframe');
-    iframe.style.cssText = 'position:fixed; left:0; top:0; width:390px; height:844px; border:none; z-index:-9999;';
-    document.body.appendChild(iframe);
-    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-    iframeDoc.open();
-    iframeDoc.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-      <style>*{margin:0;padding:0;box-sizing:border-box;}html,body{width:390px;display:block;background:#FFFDF9;}</style>
-      </head><body><div id="pdf-wrapper">${htmlContainer.innerHTML}</div></body></html>`);
-    iframeDoc.close();
+    // PDF Hidden Container Logic
+    const pContainer = document.createElement('div');
+    pContainer.id = "pdf-render-target";
+    pContainer.style.cssText = 'position:absolute; left:-9999px; top:0; width:390px; background:#FFFDF9;';
+    pContainer.innerHTML = htmlContainer.innerHTML;
+    document.body.appendChild(pContainer);
 
+    const opt = {
+      margin: 0,
+      filename: pdfFilename,
+      image: { type: 'jpeg', quality: 1.0 },
+      html2canvas: { 
+        scale: 2, 
+        useCORS: true, 
+        windowWidth: 390, 
+        width: 390,
+        logging: false
+      },
+      jsPDF: { unit: 'px', format: [390, 844], orientation: 'portrait' },
+      pagebreak: { mode: 'css' }
+    };
+
+    // Use a shorter delay or no delay if possible for Safari user-gesture
     setTimeout(() => {
-      const iframeWindow = iframe.contentWindow;
-      const target = iframeDoc.getElementById('pdf-wrapper');
-      const opt = {
-        margin: 0,
-        filename: pdfFilename,
-        image: { type: 'jpeg', quality: 1.0 },
-        html2canvas: { scale: 2, useCORS: true, windowWidth: 390 },
-        jsPDF: { unit: 'px', format: [390, 844], orientation: 'portrait' }
-      };
-      iframeWindow.html2pdf().set(opt).from(target).save().then(() => {
-        document.body.removeChild(iframe);
+      window.html2pdf().set(opt).from(pContainer).save().then(() => {
+        document.body.removeChild(pContainer);
         displayToast("Brief downloaded successfully!");
       }).catch(e => {
           console.error(e);
-          document.body.removeChild(iframe);
+          document.body.removeChild(pContainer);
           displayToast("Failed to generate PDF.");
       });
-    }, 2000);
+    }, 500);
   };
 
   const copyBrief = () => {
