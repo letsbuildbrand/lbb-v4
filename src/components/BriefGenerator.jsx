@@ -268,9 +268,8 @@ const BriefGenerator = () => {
     const projectName = formData['meta_project_name'] || 'Project';
     const pdfFilename = (clientName + '_' + projectName + '_Brief.pdf').replace(/\s+/g, '_');
 
-    displayToast("Generating PDF... Please wait.");
+    displayToast("Generating PDF... This may take a moment.");
 
-    // PDF Hidden Container Logic
     const pContainer = document.createElement('div');
     pContainer.id = "pdf-render-target";
     pContainer.style.cssText = 'position:absolute; left:-9999px; top:0; width:390px; background:#FFFDF9;';
@@ -281,28 +280,33 @@ const BriefGenerator = () => {
       margin: 0,
       filename: pdfFilename,
       image: { type: 'jpeg', quality: 1.0 },
-      html2canvas: { 
-        scale: 2, 
-        useCORS: true, 
-        windowWidth: 390, 
-        width: 390,
-        logging: false
-      },
-      jsPDF: { unit: 'px', format: [390, 844], orientation: 'portrait' },
-      pagebreak: { mode: 'css' }
+      html2canvas: { scale: 1.5, useCORS: true, windowWidth: 390 },
+      jsPDF: { unit: 'px', format: [390, 844], orientation: 'portrait' }
     };
 
-    // Use a shorter delay or no delay if possible for Safari user-gesture
-    setTimeout(() => {
-      window.html2pdf().set(opt).from(pContainer).save().then(() => {
-        document.body.removeChild(pContainer);
-        displayToast("Brief downloaded successfully!");
+    // Use the original blob-opening logic for iOS compatibility
+    window.html2pdf()
+      .set(opt)
+      .from(pContainer)
+      .toPdf()
+      .get('pdf')
+      .then((pdf) => {
+          // Open in a new tab first (safest for iOS)
+          const blobUrl = pdf.output('bloburl');
+          const newTab = window.open(blobUrl, '_blank');
+          
+          if (!newTab || newTab.closed || typeof newTab.closed === 'undefined') {
+              // Fallback if popup blocked: Direct save
+              pdf.save();
+          }
+          
+          document.body.removeChild(pContainer);
+          displayToast("Brief Generated! Check your tabs or downloads.");
       }).catch(e => {
           console.error(e);
-          document.body.removeChild(pContainer);
-          displayToast("Failed to generate PDF.");
+          if (pContainer.parentNode) document.body.removeChild(pContainer);
+          displayToast("Generation failed.");
       });
-    }, 500);
   };
 
   const copyBrief = () => {
