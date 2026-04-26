@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Menu, X, ArrowRight, Play, Code, Smartphone,
@@ -1549,8 +1549,7 @@ function App() {
   };
 
   return (
-    <BrowserRouter>
-      <div className="bg-premium-dark min-h-screen text-white selection:bg-orange selection:text-white">
+    <div className="bg-premium-dark min-h-screen text-white selection:bg-orange selection:text-white">
         <div className="bg-noise" />
 
         <Routes>
@@ -1569,7 +1568,6 @@ function App() {
           } />
         </Routes>
       </div>
-    </BrowserRouter>
   );
 }
 
