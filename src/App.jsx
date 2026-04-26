@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Menu, X, ArrowRight, Play, Code, Smartphone,
@@ -9,6 +9,7 @@ import {
   Layers, BarChart3, Lock, Volume2, VolumeX, MapPin, Mail, Linkedin, Twitter, Instagram, FileText
 } from 'lucide-react';
 import createGlobe from 'cobe';
+import PurosatvaStrategy from './components/PurosatvaStrategy';
 
 // --- COMPONENTS ---
 
@@ -180,6 +181,9 @@ const Navbar = ({ onOpenModal }) => {
           <button onClick={() => navigate('/brief-generator')} className="hover:text-orange transition-colors px-3 py-1 bg-white/5 rounded-full border border-white/10 group">
             <span className="flex items-center gap-1.5"><FileText className="w-3 h-3 group-hover:text-orange" /> Open Brief</span>
           </button>
+          <Link to="/strategy/purosatva" className="hover:text-orange transition-colors px-3 py-1 bg-white/5 rounded-full border border-white/10 group">
+            <span className="flex items-center gap-1.5 text-xs">Purosatva Strategy</span>
+          </Link>
         </div>
       </div>
       <div className="flex items-center gap-4">
@@ -1545,21 +1549,27 @@ function App() {
   };
 
   return (
-    <div className="bg-premium-dark min-h-screen text-white selection:bg-orange selection:text-white">
-      <div className="bg-noise" />
+    <BrowserRouter>
+      <div className="bg-premium-dark min-h-screen text-white selection:bg-orange selection:text-white">
+        <div className="bg-noise" />
 
-      <Navbar onOpenModal={() => setIsModalOpen(true)} onNavigate={navigateTo} />
-
-      <main>
-        {currentPage === 'home' && <Home onOpenModal={() => setIsModalOpen(true)} />}
-        {currentPage === 'terms' && <TermsOfService />}
-        {currentPage === 'privacy' && <PrivacyPolicy />}
-      </main>
-
-      <Footer onNavigate={navigateTo} />
-
-      <BookingModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-    </div>
+        <Routes>
+          <Route path="/strategy/purosatva" element={<PurosatvaStrategy />} />
+          <Route path="*" element={
+            <>
+              <Navbar onOpenModal={() => setIsModalOpen(true)} onNavigate={navigateTo} />
+              <main>
+                {currentPage === 'home' && <Home onOpenModal={() => setIsModalOpen(true)} />}
+                {currentPage === 'terms' && <TermsOfService />}
+                {currentPage === 'privacy' && <PrivacyPolicy />}
+              </main>
+              <Footer onNavigate={navigateTo} />
+              <BookingModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+            </>
+          } />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
