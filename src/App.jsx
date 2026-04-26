@@ -874,7 +874,7 @@ const Testimonials = () => {
   ];
 
   return (
-    <section className="py-24 container mx-auto px-6">
+    <section id="testimonials" className="py-24 container mx-auto px-6">
       <h2 className="text-4xl md:text-5xl font-display font-bold mb-4 text-center">THE VERDICT</h2>
       <p className="text-gray-400 text-center mb-16 max-w-2xl mx-auto">
         We don't chase likes. We chase revenue, reputation, and retention. Here is the data from the frontlines.
