@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import './purosatva-strategy.css';
 import { COMPETITOR_DATA, renderCompetitorSection } from '../data/purosatva-competitor-data';
 import { CALENDAR_DATA, WEEK_LABELS, getWeek } from '../data/purosatva-calendar-data';
 
@@ -218,7 +219,7 @@ function renderCompetitorHTML(container) {
       </div>
       <h2 class="comp-section-title" style="font-family:'Instrument Serif',serif;font-size:clamp(28px,4vw,40px);line-height:1.15;letter-spacing:-0.01em;color:#f0eee8;margin-bottom:16px;">What nobody in the market is doing</h2>
       <p style="color:#a09d98;font-size:15px;max-width:580px;line-height:1.7;margin-bottom:40px;">While all competitors compete on health, supply chain, and freshness | Purosatva operates in an almost entirely uncontested space.</p>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:40px;">${gapsRows}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:40px;" class="puro-2col">${gapsRows}</div>
 
       <div style="background:linear-gradient(120deg,rgba(201,169,110,0.15),rgba(201,169,110,0.05));border:1px solid rgba(201,169,110,0.2);border-radius:12px;padding:20px 24px;font-size:14px;color:#e8d5b0;line-height:1.7;margin-bottom:40px;">
         <strong style="color:#f0d48a;">True category:</strong> Purosatva is not entering dairy, organic milk, or premium packaged milk. It is creating <strong style="color:#f0d48a;">"Participatory Agriculture / Ownership-based Food System"</strong> | closest to CSA farm shares, vineyard ownership, or European cow-sharing models. In India: <strong style="color:#f0d48a;">almost entirely untapped.</strong>
@@ -340,7 +341,7 @@ const PurosatvaStrategy = () => {
   };
 
   return (
-    <div style={{ background: '#0a0a0b', color: '#f0eee8', minHeight: '100vh', fontFamily: 'monospace, sans-serif' }}>
+    <div style={{ background: '#0a0a0b', color: '#f0eee8', minHeight: '100vh' }}>
       {/* Nav */}
       <nav style={{
         position: 'sticky',
@@ -354,10 +355,31 @@ const PurosatvaStrategy = () => {
         alignItems: 'center',
         justifyContent: 'space-between',
       }}>
-        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: '16px', fontStyle: 'italic', color: '#c9a96e', letterSpacing: '0.02em' }}>
-          Purosatva Strategy
-        </div>
-        <div style={{ display: 'flex', gap: '4px' }}>
+        {/* Logo + Brand */}
+        <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{
+            width: '32px',
+            height: '32px',
+            borderRadius: '50%',
+            background: '#c9a96e',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontFamily: "'Geist', sans-serif",
+            fontSize: '9px',
+            fontWeight: 800,
+            color: '#0a0a0b',
+            letterSpacing: '-0.02em',
+            flexShrink: 0,
+          }}>
+            LBB.
+          </div>
+          <div style={{ fontFamily: "'Geist', sans-serif", fontSize: '12px', fontWeight: 600, color: '#f0eee8', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+            Let's Build Brand
+          </div>
+        </a>
+        {/* Nav Links */}
+        <div className="puro-nav-links" style={{ display: 'flex', gap: '4px' }}>
           {['mission', 'brand', 'competitors', 'framework', 'phases', 'calendar'].map(link => (
             <a
               key={link}
@@ -516,13 +538,13 @@ const PurosatvaStrategy = () => {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }} className="puro-3col">
             {[
               { pillar: 'शुद्धता', english: 'Purity', desc: 'Not a claim. A way of life.' },
               { pillar: 'पारदर्शकता', english: 'Transparency', desc: 'Not a promise. A practice.' },
               { pillar: 'निसर्गाशी नातं', english: 'Connection to Nature', desc: 'Not a feature. A philosophy.' },
             ].map(p => (
-              <div key={p.pillar} style={{ background: '#111113', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '20px', padding: '28px 32px' }}>
+              <div key={p.pillar} style={{ background: '#111113', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '20px', padding: '28px 32px' }} className="puro-card">
                 <div style={{ fontSize: '10px', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#7a7875', fontFamily: 'monospace', marginBottom: '10px' }}>Brand Pillar</div>
                 <div style={{ fontSize: '18px', fontFamily: "'Instrument Serif', serif", color: '#c9a96e', marginBottom: '6px' }}>{p.pillar}</div>
                 <div style={{ fontSize: '13px', color: '#a09d98', fontStyle: 'italic', marginBottom: '6px' }}>{p.english}</div>
@@ -622,7 +644,7 @@ const PurosatvaStrategy = () => {
             Every piece of content falls into one of three layers. The ratio is intentional: the cinematic creates desire, the raw creates trust, the graphic creates clarity. Together they build a complete world.
           </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '14px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '14px' }} className="puro-3col">
             {[
               { emoji: '🎬', title: 'Cinematic / Film', pct: '50%', bg: 'rgba(155,140,255,0.1)', color: '#9b8cff', border: 'rgba(155,140,255,0.15)', body: 'Beautiful, slow, deliberate. Drone shots of the farm at dawn. Early morning routines. Hands washing a cow\'s face. Cinematic content is the visual heartbeat | it makes the brand feel aspirational and real. Music-driven. Almost like short films.' },
               { emoji: '📱', title: 'Raw / UGC Style', pct: '30%', bg: 'rgba(107,203,119,0.1)', color: '#6bcb77', border: 'rgba(107,203,119,0.15)', body: 'Unpolished, real, warm. Shot on phone. Natural light. Children laughing. Hands on fur. Milk being poured. Raw content is the emotional texture | it makes the cinematic feel grounded and authentic.' },

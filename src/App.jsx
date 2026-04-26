@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -176,14 +176,8 @@ const Navbar = ({ onOpenModal }) => {
           <button onClick={() => { navigate('/'); setTimeout(() => document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className="hover:text-amber-500 transition-colors">Work</button>
           <button onClick={() => { navigate('/'); setTimeout(() => document.getElementById('why-us')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className="hover:text-amber-500 transition-colors">The Engine</button>
           <button onClick={() => { navigate('/'); setTimeout(() => document.getElementById('protocol')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className="hover:text-amber-500 transition-colors">Protocol</button>
-          <button onClick={() => navigate('/testimonials')} className="hover:text-amber-500 transition-colors">Testimonials</button>
-          <button onClick={() => navigate('/teams')} className="hover:text-amber-500 transition-colors">The Unit</button>
-          <button onClick={() => navigate('/brief-generator')} className="hover:text-orange transition-colors px-3 py-1 bg-white/5 rounded-full border border-white/10 group">
-            <span className="flex items-center gap-1.5"><FileText className="w-3 h-3 group-hover:text-orange" /> Open Brief</span>
-          </button>
-          <Link to="/strategy/purosatva" className="hover:text-orange transition-colors px-3 py-1 bg-white/5 rounded-full border border-white/10 group">
-            <span className="flex items-center gap-1.5 text-xs">Purosatva Strategy</span>
-          </Link>
+          <button onClick={() => { navigate('/'); setTimeout(() => document.getElementById('testimonials')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className="hover:text-amber-500 transition-colors">Testimonials</button>
+          <button onClick={() => { navigate('/'); setTimeout(() => document.getElementById('team')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className="hover:text-amber-500 transition-colors">The Unit</button>
         </div>
       </div>
       <div className="flex items-center gap-4">
