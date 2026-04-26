@@ -197,7 +197,7 @@ function renderCompetitorHTML(container) {
       </div>
       <h2 class="comp-section-title" style="font-family:'Instrument Serif',serif;font-size:clamp(28px,4vw,40px);line-height:1.15;letter-spacing:-0.01em;color:#f0eee8;margin-bottom:16px;">Where Purosatva stands in the market</h2>
       <p style="color:#a09d98;font-size:15px;max-width:580px;line-height:1.7;margin-bottom:40px;">Purosatva is not competing with Amul or Gokul. Its real battlefield is the organic farm-led lifestyle space.</p>
-      <div style="margin-bottom:40px;overflow-x:auto;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,0.07);background:#111113;" class="puro-comp-table-wrap">
+      <div style="margin-bottom:40px;border-radius:20px;border:1px solid rgba(255,255,255,0.07);background:#111113;" class="puro-comp-table-wrap">
         <table style="width:100%;border-collapse:collapse;background:#111113;">
           <thead>
             <tr style="background:#18181b;">
@@ -716,7 +716,7 @@ const PurosatvaStrategy = () => {
             Each platform has its own psychological contract. Content that ignores this gets ignored. Every post should be native to its platform, adapted for its audience, but unified in the EMOC message.
           </p>
 
-          <div style={{ background: '#111113', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '20px', marginBottom: '40px', overflow: 'hidden' }} className="puro-platform-table-wrap">
+          <div style={{ background: '#111113', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '20px', marginBottom: '40px' }} className="puro-platform-table-wrap">
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
