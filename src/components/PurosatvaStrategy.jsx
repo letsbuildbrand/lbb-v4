@@ -197,7 +197,7 @@ function renderCompetitorHTML(container) {
       </div>
       <h2 class="comp-section-title" style="font-family:'Instrument Serif',serif;font-size:clamp(28px,4vw,40px);line-height:1.15;letter-spacing:-0.01em;color:#f0eee8;margin-bottom:16px;">Where Purosatva stands in the market</h2>
       <p style="color:#a09d98;font-size:15px;max-width:580px;line-height:1.7;margin-bottom:40px;">Purosatva is not competing with Amul or Gokul. Its real battlefield is the organic farm-led lifestyle space.</p>
-      <div style="margin-bottom:40px;overflow-x:auto;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,0.07);background:#111113;">
+      <div style="margin-bottom:40px;overflow-x:auto;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,0.07);background:#111113;" class="puro-comp-table-wrap">
         <table style="width:100%;border-collapse:collapse;background:#111113;">
           <thead>
             <tr style="background:#18181b;">
@@ -410,11 +410,11 @@ const PurosatvaStrategy = () => {
             top: '-120px',
             left: '50%',
             transform: 'translateX(-50%)',
-            width: '700px',
+            maxWidth: '700px',
             height: '500px',
             background: 'radial-gradient(ellipse at center, rgba(201,169,110,0.12) 0%, transparent 70%)',
             pointerEvents: 'none',
-          }} />
+          }} className="puro-mission-glow" />
           <div style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -423,7 +423,7 @@ const PurosatvaStrategy = () => {
             border: '1px solid rgba(201,169,110,0.25)',
             borderRadius: '999px',
             padding: '6px 14px',
-            fontSize: '11px',
+            fontSize: '9px',
             letterSpacing: '0.12em',
             textTransform: 'uppercase',
             color: '#c9a96e',
@@ -506,7 +506,7 @@ const PurosatvaStrategy = () => {
           </p>
 
           {/* Brand Pillars Grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }} className="puro-2col">
             {[
               { title: 'Brand Name', name: 'Purosatva', sub: 'शुद्ध + सात्त्व | Purity in nature. The name itself is the promise.' },
               { title: 'Core Industry', name: 'Premium Dairy', sub: 'Not milk delivery. Cow ownership. Farm connection. Community.' },
@@ -519,7 +519,7 @@ const PurosatvaStrategy = () => {
             ))}
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }} className="puro-2col">
             {[
               { title: 'Target Audience', body: 'Urban families in Kolhapur district who value health and quality. Parents aged 28–45 who grew up with a connection to villages and farming. Families who feel the quiet loss of authenticity in modern food but do not know how to reclaim it. Children who know every brand on their phone but have never touched a cow.' },
               { title: 'Brand Voice', body: 'Calm. Confident. Deeply rooted. Never loud, never salesy, never desperate. The brand speaks like someone who knows their value and is simply inviting the right people to be part of it. Emotion leads. Logic supports. Visuals complete.' },
@@ -566,7 +566,7 @@ const PurosatvaStrategy = () => {
             This is not a prepaid milk plan. This is cow ownership. A family invests ₹1 lakh into their cow | and receives daily milk deliveries of equivalent worth over time. But this is never how it is communicated. The communication feels like belonging, like a family tie, like owning a piece of something real and alive.
           </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '24px' }} className="puro-2col">
             {[
               { emoji: '🐃', title: 'Farm Connected Milk', sub: 'Direct from the source', color: '#4ecdc4', bg: 'rgba(78,205,196,0.12)', body: 'Your family receives milk directly from your cow on our farm. Not processed. Not packaged. Not standardised. Just pure, farm-fresh milk delivered to your doorstep every morning.' },
               { emoji: '🚪', title: 'Farm Access Anytime', sub: 'Visit your cow', color: '#6bcb77', bg: 'rgba(107,203,119,0.12)', body: 'You and your family can visit the farm anytime. Bring your children. Let them touch the source. Let them meet the cow that belongs to them. This is not a farm tour | this is homecoming.' },
@@ -678,7 +678,7 @@ const PurosatvaStrategy = () => {
             The audience moves through four emotional stages. Each phase has a specific psychological goal and a specific tone. The content plan is designed to guide them through all four | slowly, gently, inevitably.
           </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }} className="puro-2col">
             {[
               { phase: 'Phase 1', days: 'Days 1–10', title: 'The Uncomfortable Question', quote: '"Do you really know where your milk comes from?"', body: 'Make them pause. Create doubt. Disrupt their existing mental model of "premium milk." The content never mentions Purosatva as a product. It asks questions they have never been asked before.', tone: 'Questioning, reflective, unsettling', color: '#64748b' },
               { phase: 'Phase 2', days: 'Days 11–20', title: 'The Honest Answer', quote: '"There is another way."', body: 'Introduce the philosophy. Let emotion breathe. Build trust through transparency. The founder\'s story is told in full. The farm is revealed. The concept of cow ownership is planted | not as a financial model, but as a lifestyle upgrade.', tone: 'Warm, revealing, philosophical', color: '#059669' },
@@ -716,43 +716,43 @@ const PurosatvaStrategy = () => {
             Each platform has its own psychological contract. Content that ignores this gets ignored. Every post should be native to its platform, adapted for its audience, but unified in the EMOC message.
           </p>
 
-          <div style={{ background: '#111113', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '20px', padding: '0', marginBottom: '40px', overflow: 'hidden' }}>
-            {[
-              { platform: '📸 Instagram', sub: 'Reels, Carousels, Stories', format: 'Reels 30–90s cinematic / Carousel 3–6 slides / Stories daily', times: 'Tue–Sun, 7am–9am & 6pm–8pm', priority: 'Primary', width: '90%', gradient: 'linear-gradient(90deg, #ee2a7b, #f9ce34)', bg: 'linear-gradient(135deg, #f9ce34, #ee2a7b, #6228d7)' },
-              { platform: '💬 WhatsApp', sub: 'Status, Broadcast Lists', format: 'Status 30s clips / Text-forward stories / Personal outreach', times: 'Daily, 8am–10am', priority: 'High', width: '75%', gradient: 'linear-gradient(90deg, #25d366, #128c7f)', bg: '#25d366' },
-              { platform: '👥 Facebook', sub: 'Long-form, Video, Groups', format: 'Extended video stories / Community group engagement / Live Q&A', times: 'Daily, 9am–11am', priority: 'Secondary', width: '50%', gradient: 'linear-gradient(90deg, #1877f2, #66b2ff)', bg: '#1877f2' },
-              { platform: '🎵 YouTube Shorts', sub: 'Shorts + Long-form', format: 'Shorts under 60s / Extended farm stories / Behind-the-scenes', times: 'Thu–Sun, 12pm–3pm & 7pm–10pm', priority: 'Evergreen', width: '65%', gradient: 'linear-gradient(90deg, #ff0000, #ff914d)', bg: '#000' },
-            ].map((row, i) => (
-              <div key={row.platform} style={{ display: 'grid', gridTemplateColumns: '180px 1fr 1fr 1fr', gap: 0, borderBottom: i === 3 ? 'none' : '1px solid rgba(255,255,255,0.07)', alignItems: 'center' }}>
-                {i === 0 && (
-                  <>
-                    <div style={{ padding: '12px 16px 12px 0', fontSize: '10px', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#7a7875', fontFamily: 'monospace' }}>Platform</div>
-                    <div style={{ padding: '12px 16px', fontSize: '10px', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#7a7875', fontFamily: 'monospace' }}>Optimal Format</div>
-                    <div style={{ padding: '12px 16px', fontSize: '10px', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#7a7875', fontFamily: 'monospace' }}>Peak Times</div>
-                    <div style={{ padding: '12px 16px', fontSize: '10px', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#7a7875', fontFamily: 'monospace' }}>Priority</div>
-                  </>
-                )}
-                {i > 0 && (
-                  <>
-                    <div style={{ padding: '18px 16px 18px 0', display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ background: '#111113', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '20px', marginBottom: '40px', overflow: 'hidden' }} className="puro-platform-table-wrap">
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+                  <th style={{ padding: '12px 16px 12px 0', fontSize: '10px', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#7a7875', fontFamily: 'monospace', textAlign: 'left' }}>Platform</th>
+                  <th style={{ padding: '12px 16px', fontSize: '10px', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#7a7875', fontFamily: 'monospace', textAlign: 'left' }}>Optimal Format</th>
+                  <th style={{ padding: '12px 16px', fontSize: '10px', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#7a7875', fontFamily: 'monospace', textAlign: 'left' }}>Peak Times</th>
+                  <th style={{ padding: '12px 16px', fontSize: '10px', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#7a7875', fontFamily: 'monospace', textAlign: 'left' }}>Priority</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  { platform: '📸 Instagram', sub: 'Reels, Carousels, Stories', format: 'Reels 30–90s cinematic / Carousel 3–6 slides / Stories daily', times: 'Tue–Sun, 7am–9am & 6pm–8pm', priority: 'Primary', width: '90%', gradient: 'linear-gradient(90deg, #ee2a7b, #f9ce34)', bg: 'linear-gradient(135deg, #f9ce34, #ee2a7b, #6228d7)' },
+                  { platform: '💬 WhatsApp', sub: 'Status, Broadcast Lists', format: 'Status 30s clips / Text-forward stories / Personal outreach', times: 'Daily, 8am–10am', priority: 'High', width: '75%', gradient: 'linear-gradient(90deg, #25d366, #128c7f)', bg: '#25d366' },
+                  { platform: '👥 Facebook', sub: 'Long-form, Video, Groups', format: 'Extended video stories / Community group engagement / Live Q&A', times: 'Daily, 9am–11am', priority: 'Secondary', width: '50%', gradient: 'linear-gradient(90deg, #1877f2, #66b2ff)', bg: '#1877f2' },
+                  { platform: '🎵 YouTube Shorts', sub: 'Shorts + Long-form', format: 'Shorts under 60s / Extended farm stories / Behind-the-scenes', times: 'Thu–Sun, 12pm–3pm & 7pm–10pm', priority: 'Evergreen', width: '65%', gradient: 'linear-gradient(90deg, #ff0000, #ff914d)', bg: '#000' },
+                ].map((row, i) => (
+                  <tr key={row.platform} style={{ borderBottom: i === 3 ? 'none' : '1px solid rgba(255,255,255,0.07)' }}>
+                    <td style={{ padding: '18px 16px 18px 0', display: 'flex', alignItems: 'center', gap: '12px' }}>
                       <div style={{ width: '34px', height: '34px', borderRadius: '9px', background: row.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px', flexShrink: 0 }}>{row.platform.split(' ')[0]}</div>
                       <div>
                         <div style={{ fontWeight: 500, fontSize: '13px', color: '#f0eee8' }}>{row.platform.split(' ').slice(1).join(' ')}</div>
                         <div style={{ fontSize: '11px', color: '#7a7875' }}>{row.sub}</div>
                       </div>
-                    </div>
-                    <div style={{ padding: '18px 16px', fontSize: '13px', color: '#a09d98' }}>{row.format}</div>
-                    <div style={{ padding: '18px 16px', fontSize: '13px', color: '#a09d98' }}>{row.times}</div>
-                    <div style={{ padding: '18px 16px' }}>
+                    </td>
+                    <td style={{ padding: '18px 16px', fontSize: '13px', color: '#a09d98' }}>{row.format}</td>
+                    <td style={{ padding: '18px 16px', fontSize: '13px', color: '#a09d98' }}>{row.times}</td>
+                    <td style={{ padding: '18px 16px' }}>
                       <div style={{ fontSize: '14px', fontWeight: 600, color: '#f0eee8' }}>{row.priority}</div>
                       <div style={{ width: '100%', height: '4px', background: 'rgba(255,255,255,0.06)', borderRadius: '999px', overflow: 'hidden', marginTop: '4px' }}>
                         <div style={{ height: '100%', width: row.width, background: row.gradient, borderRadius: '999px' }} />
                       </div>
-                    </div>
-                  </>
-                )}
-              </div>
-            ))}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
 
           <div style={{ background: 'linear-gradient(120deg,rgba(201,169,110,0.15),rgba(201,169,110,0.05))', border: '1px solid rgba(201,169,110,0.2)', borderRadius: '12px', padding: '20px 24px', fontSize: '14px', color: '#e8d5b0', lineHeight: '1.7' }}>
