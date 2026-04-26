@@ -1060,8 +1060,9 @@ body::before {
 
   .wrapper { padding: 0 16px 80px; }
 
-  /* Mission hero glow — wider on mobile */
+  /* Mission hero glow — wider on mobile, positioned absolute */
   .puro-mission-glow {
+    position: absolute;
     max-width: 120vw !important;
     width: 120vw !important;
   }
@@ -1105,6 +1106,7 @@ body::before {
   /* Grid columns — force single column on mobile */
   .puro-2col,
   .puro-3col,
+  .puro-emoc-grid,
   [style*="grid-template-columns:1fr 1fr"] {
     grid-template-columns: 1fr !important;
   }
@@ -1152,9 +1154,6 @@ body::before {
 
   /* Phase cards */
   .phase-card { padding: 18px; }
-
-  /* EMOC cells */
-  .emoc-grid { grid-template-columns: 1fr; }
 
   /* Highlight boxes */
   .highlight { padding: 16px; font-size: 13px; }

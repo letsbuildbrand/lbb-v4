@@ -404,7 +404,7 @@ const PurosatvaStrategy = () => {
 
       <div style={{ maxWidth: '960px', margin: '0 auto', padding: '0 28px 120px' }}>
         {/* Hero */}
-        <section id="mission" style={{ padding: '100px 0 80px', position: 'relative', overflow: 'hidden' }}>
+        <section id="mission" style={{ padding: '100px 0 80px', overflow: 'hidden' }}>
           <div style={{
             position: 'absolute',
             top: '-120px',
@@ -603,7 +603,7 @@ const PurosatvaStrategy = () => {
             This is not optional. The EMOC framework creates psychological completeness | the audience's brain receives emotion, owns a piece of content, understands the logic, and receives a direction. That is what builds memory and trust.
           </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2px', borderRadius: '28px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.07)', marginBottom: '24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2px', borderRadius: '28px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.07)', marginBottom: '24px' }} className="puro-emoc-grid">
             {[
               { letter: 'E', color: '#c9a96e', bg: 'rgba(201,169,110,0.15)', title: 'Emotion', body: 'A feeling that the audience did not know they were carrying. The quiet ache of a lost connection. The warmth of a memory from childhood. The longing for something pure. Emotion opens the door before logic walks in.', sub: 'People do not buy what makes sense. They buy what makes them feel something. Emotion is the hook. Without it, no post survives the scroll.' },
               { letter: 'M', color: '#4ecdc4', bg: 'rgba(78,205,196,0.12)', title: 'Memory', body: 'A piece of the brand or the founder\'s story that grounds everything in something real. The cow named something. The morning when the first calf was born. Memory makes the brand human and the philosophy lived.', sub: 'People invest emotionally in stories before they invest financially. Memory creates parasocial trust | the feeling that you know the people behind the product.' },
@@ -734,7 +734,7 @@ const PurosatvaStrategy = () => {
                   { platform: '🎵 YouTube Shorts', sub: 'Shorts + Long-form', format: 'Shorts under 60s / Extended farm stories / Behind-the-scenes', times: 'Thu–Sun, 12pm–3pm & 7pm–10pm', priority: 'Evergreen', width: '65%', gradient: 'linear-gradient(90deg, #ff0000, #ff914d)', bg: '#000' },
                 ].map((row, i) => (
                   <tr key={row.platform} style={{ borderBottom: i === 3 ? 'none' : '1px solid rgba(255,255,255,0.07)' }}>
-                    <td style={{ padding: '18px 16px 18px 0', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <td style={{ padding: '18px 16px 18px 20px', display: 'flex', alignItems: 'center', gap: '12px' }}>
                       <div style={{ width: '34px', height: '34px', borderRadius: '9px', background: row.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px', flexShrink: 0 }}>{row.platform.split(' ')[0]}</div>
                       <div>
                         <div style={{ fontWeight: 500, fontSize: '13px', color: '#f0eee8' }}>{row.platform.split(' ').slice(1).join(' ')}</div>
