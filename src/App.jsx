@@ -18,7 +18,7 @@ import PurosatvaStrategy from './components/PurosatvaStrategy';
 const VideoCarousel = ({ unmutedId, setUnmutedId }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const isCarouselUnmuted = unmutedId === 'carousel';
-  const videoRefs = React.useRef([]);
+  const videoRefs = useRef([]);
 
   const videos = [
     { id: 1, src: "/videos/1.mp4", title: "High-Performance Funnel", tag: "STRATEGY" },
@@ -263,7 +263,7 @@ const Hero = () => (
 );
 
 const InteractiveCore = () => {
-  const containerRef = React.useRef(null);
+  const containerRef = useRef(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   const handleMouseMove = (e) => {
@@ -464,7 +464,7 @@ const LongFormShowcase = ({ unmutedId, setUnmutedId }) => {
     { id: 'long3', src: "/videos/long3.mp4", title: "Framework Analysis" }
   ];
 
-  const videoRefs = React.useRef({});
+  const videoRefs = useRef({});
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -1069,7 +1069,7 @@ const FAQ = () => {
 };
 
 const Globe = () => {
-  const canvasRef = React.useRef();
+  const canvasRef = useRef();
 
   const markers = [
     { location: [40, -100], size: 0.05 }, // USA
